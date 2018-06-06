@@ -13,14 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\Bitmaps">
-      <UniqueIdentifier>{9811770f-6be2-4e37-8478-57a02cab6dcf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Objects">
-      <UniqueIdentifier>{6c3027ef-6e3a-457b-9c3d-94e6ebf6d2cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{3a216a09-1110-4ad6-983e-ecdda610e428}</UniqueIdentifier>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{faef907b-7dde-4754-b592-dc87833a7f1d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +34,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,25 +59,23 @@
     <ClCompile Include="TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Shaders\ColorFragmentShader.fragmentshader">
-      <Filter>Resource Files\Shaders</Filter>
+    <None Include="resources\shaders\ColorFragmentShader.fragmentshader">
+      <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="Resources\Shaders\StandardShading.fragmentshader">
-      <Filter>Resource Files\Shaders</Filter>
+    <None Include="resources\shaders\StandardShading.fragmentshader">
+      <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="Resources\Shaders\StandardShading.vertexshader">
-      <Filter>Resource Files\Shaders</Filter>
+    <None Include="resources\shaders\StandardShading.vertexshader">
+      <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="Resources\Shaders\TransformVertexShader.vertexshader">
-      <Filter>Resource Files\Shaders</Filter>
+    <None Include="resources\shaders\TransformVertexShader.vertexshader">
+      <Filter>Resource Files\shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\Bitmaps\mandrill.bmp">
-      <Filter>Resource Files\Bitmaps</Filter>
-    </Image>
   </ItemGroup>
 </Project>

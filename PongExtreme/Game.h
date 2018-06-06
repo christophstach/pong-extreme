@@ -8,6 +8,7 @@ class Game
 private:
 	GLFWwindow* window;
 	GLuint* programId;
+	ShaderLoader* shaderLoader;
 public:
 	Game();
 	~Game();

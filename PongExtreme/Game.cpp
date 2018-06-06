@@ -4,21 +4,19 @@
 
 Game::Game()
 {
+	this->shaderLoader = new ShaderLoader();
 }
 
 Game::~Game()
 {
 	delete this->window;
 	delete this->programId;
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	printf("Key pressed!key_callback\n");
+	delete this->shaderLoader;
 }
 
 int Game::init()
 {
+	printf("Initializing...\n");
 	glfwInit() || fprintf(stderr, "Failed to initialize GLFW");
 	glfwSetErrorCallback(logError);
 
@@ -46,9 +44,20 @@ int Game::init()
 	}
 
 	glfwSetKeyCallback(this->window, onKeyPress);
-	//std::bind(std::bind(this->window, &Game::onKeyPress), glfwSetKeyCallback);
-	//glfwSetKeyCallback(this->window, key_callback);
 
+	/*
+	this->programId = this->shaderLoader->load(
+		"resources/shaders/StandardShading.vertexshader", 
+		"resources/shaders/StandardShading.fragmentshader"
+	);
+	*/
+
+	this->programId = this->shaderLoader->load(
+		"resources/shaders/TransformVertexShader.vertexshader",
+		"resources/shaders/ColorFragmentShader.fragmentshader"
+	);
+
+	glUseProgram(*this->programId);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
