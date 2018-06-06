@@ -2,9 +2,9 @@
 #include "TextureLoader.h"
 
 
-GLuint loadBMP_custom(const char * imagepath) {
+GLuint TextureLoader::loadCustomBmp(const char * imagePath) {
 
-	printf("Reading image %s\n", imagepath);
+	printf("Reading image %s\n", imagePath);
 
 	// Data read from the header of the BMP file
 	unsigned char header[54];
@@ -15,8 +15,12 @@ GLuint loadBMP_custom(const char * imagepath) {
 	unsigned char * data;
 
 	// Open the file
-	FILE * file = fopen(imagepath, "rb");
-	if (!file) { printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath); getchar(); return 0; }
+	FILE * file = fopen(imagePath, "rb");
+	if (!file) {
+		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagePath);
+		getchar();
+		return 0;
+	}
 
 	// Read the header, i.e. the 54 first bytes
 
@@ -41,8 +45,12 @@ GLuint loadBMP_custom(const char * imagepath) {
 	height = *(int*)&(header[0x16]);
 
 	// Some BMP files are misformatted, guess missing information
-	if (imageSize == 0)    imageSize = width * height * 3; // 3 : one byte for each Red, Green and Blue component
-	if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
+	if (imageSize == 0) {
+		imageSize = width * height * 3; // 3 : one byte for each Red, Green and Blue component
+	}
+	if (dataPos == 0) {
+		dataPos = 54; // The BMP header is done that way
+	}
 
 	// Create a buffer
 	data = new unsigned char[imageSize];
@@ -54,11 +62,11 @@ GLuint loadBMP_custom(const char * imagepath) {
 	fclose(file);
 
 	// Create one OpenGL texture
-	GLuint textureID;
-	glGenTextures(1, &textureID);
+	GLuint textureId;
+	glGenTextures(1, &textureId);
 
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureId);
 
 	// Give the image to OpenGL
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
@@ -78,21 +86,21 @@ GLuint loadBMP_custom(const char * imagepath) {
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// Return the ID of the texture we just created
-	return textureID;
+	return textureId;
 }
 
 /* Geht nicht mehr ab GLFW3
-GLuint loadTGA_glfw(const char * imagepath){
+GLuint loadTGA_glfw(const char * imagePath){
 
 	// Create one OpenGL texture
-	GLuint textureID;
-	glGenTextures(1, &textureID);
+	GLuint textureId;
+	glGenTextures(1, &textureId);
 
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureId);
 
 	// Read the file, call glTexImage2D with the right parameters
-	glfwLoadTexture2D(imagepath, 0);
+	glfwLoadTexture2D(imagePath, 0);
 
 	// Nice trilinear filtering.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -102,7 +110,7 @@ GLuint loadTGA_glfw(const char * imagepath){
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// Return the ID of the texture we just created
-	return textureID;
+	return textureId;
 }
 
 */
@@ -111,29 +119,29 @@ GLuint loadTGA_glfw(const char * imagepath){
 #define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
 #define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
 
-GLuint loadDDS(const char * imagepath) {
+GLuint TextureLoader::loadDds(const char * imagePath) {
 
 	unsigned char header[124];
 
-	FILE *fp;
+	FILE *file;
 
 	/* try to open the file */
-	fp = fopen(imagepath, "rb");
-	if (fp == NULL) {
-		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath); getchar();
+	file = fopen(imagePath, "rb");
+	if (file == NULL) {
+		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagePath); getchar();
 		return 0;
 	}
 
 	/* verify the type of file */
-	char filecode[4];
-	fread(filecode, 1, 4, fp);
-	if (strncmp(filecode, "DDS ", 4) != 0) {
-		fclose(fp);
+	char fileCode[4];
+	fread(fileCode, 1, 4, file);
+	if (strncmp(fileCode, "DDS ", 4) != 0) {
+		fclose(file);
 		return 0;
 	}
 
 	/* get the surface desc */
-	fread(&header, 124, 1, fp);
+	fread(&header, 124, 1, file);
 
 	unsigned int height = *(unsigned int*)&(header[8]);
 	unsigned int width = *(unsigned int*)&(header[12]);
@@ -143,13 +151,13 @@ GLuint loadDDS(const char * imagepath) {
 
 
 	unsigned char * buffer;
-	unsigned int bufsize;
+	unsigned int bufferSize;
 	/* how big is it going to be including all mipmaps? */
-	bufsize = mipMapCount > 1 ? linearSize * 2 : linearSize;
-	buffer = (unsigned char*)malloc(bufsize * sizeof(unsigned char));
-	fread(buffer, 1, bufsize, fp);
+	bufferSize = mipMapCount > 1 ? linearSize * 2 : linearSize;
+	buffer = (unsigned char*)malloc(bufferSize * sizeof(unsigned char));
+	fread(buffer, 1, bufferSize, file);
 	/* close the file pointer */
-	fclose(fp);
+	fclose(file);
 
 	unsigned int components = (fourCC == FOURCC_DXT1) ? 3 : 4;
 	unsigned int format;
@@ -170,11 +178,11 @@ GLuint loadDDS(const char * imagepath) {
 	}
 
 	// Create one OpenGL texture
-	GLuint textureID;
-	glGenTextures(1, &textureID);
+	GLuint textureId;
+	glGenTextures(1, &textureId);
 
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureId);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
@@ -184,8 +192,7 @@ GLuint loadDDS(const char * imagepath) {
 	for (unsigned int level = 0; level < mipMapCount && (width || height); ++level)
 	{
 		unsigned int size = ((width + 3) / 4)*((height + 3) / 4)*blockSize;
-		glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
-			0, size, buffer + offset);
+		glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0, size, buffer + offset);
 
 		offset += size;
 		width /= 2;
@@ -199,5 +206,5 @@ GLuint loadDDS(const char * imagepath) {
 
 	free(buffer);
 
-	return textureID;
+	return textureId;
 }

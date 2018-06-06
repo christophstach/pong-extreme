@@ -5,6 +5,8 @@
 Game::Game()
 {
 	this->shaderLoader = new ShaderLoader();
+	this->objectLoader = new ObjectLoader();
+	this->textureLoader = new TextureLoader();
 }
 
 Game::~Game()
@@ -12,6 +14,8 @@ Game::~Game()
 	delete this->window;
 	delete this->programId;
 	delete this->shaderLoader;
+	delete this->textureLoader;
+	delete this->objectLoader;
 }
 
 int Game::init()

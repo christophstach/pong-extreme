@@ -6,9 +6,11 @@ void onKeyPress(GLFWwindow* window, int key, int scancode, int action, int mods)
 class Game
 {
 private:
-	GLFWwindow* window;
+	GLFWwindow * window;
 	GLuint* programId;
 	ShaderLoader* shaderLoader;
+	TextureLoader* textureLoader;
+	ObjectLoader* objectLoader;
 public:
 	Game();
 	~Game();

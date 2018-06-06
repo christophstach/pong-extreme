@@ -2,11 +2,14 @@
 #include "ThreeDimensionalObject.h"
 
 
-ThreeDimensionalObject::ThreeDimensionalObject(const char* filePath)
+ThreeDimensionalObject::ThreeDimensionalObject(const char* filePath, ObjectLoader* objectLoader, TextureLoader* textureLoader)
 {
-	bool res = loadOBJ(filePath, vertices, uvs, normals);
+	this->textureLoader = textureLoader;
+	this->objectLoader = objectLoader;
+
+	this->objectLoader->load(filePath, vertices, uvs, normals);
 	// Load the texture
-	texture = loadBMP_custom("mandrill.bmp");
+	texture = this->textureLoader->loadCustomBmp("mandrill.bmp");
 
 	glGenVertexArrays(1, &vertextArrayId);
 	glBindVertexArray(vertextArrayId);

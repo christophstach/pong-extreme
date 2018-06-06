@@ -11,18 +11,14 @@
 // - More secure. Change another line and you can inject code.
 // - Loading from memory, stream, etc
 
-bool loadOBJ(
-	const char * path,
-	std::vector<glm::vec3> & out_vertices,
-	std::vector<glm::vec2> & out_uvs,
-	std::vector<glm::vec3> & out_normals
-) {
+bool ObjectLoader::load(const char* path, std::vector<glm::vec3> &outVertices, std::vector<glm::vec2> &outUvs, std::vector<glm::vec3> &outNormals)
+{
 	printf("Loading OBJ file %s...\n", path);
 
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<glm::vec3> temp_vertices;
-	std::vector<glm::vec2> temp_uvs;
-	std::vector<glm::vec3> temp_normals;
+	std::vector<glm::vec3> tempVertices;
+	std::vector<glm::vec2> tempUvs;
+	std::vector<glm::vec3> tempNormals;
 
 
 	FILE * file = fopen(path, "r");
@@ -37,26 +33,26 @@ bool loadOBJ(
 		char lineHeader[128];
 		// read the first word of the line
 		int res = fscanf(file, "%s", lineHeader);
-		if (res == EOF)
+		if (res == EOF) {
 			break; // EOF = End Of File. Quit the loop.
-
+		}
 		// else : parse lineHeader
 
 		if (strcmp(lineHeader, "v") == 0) {
 			glm::vec3 vertex;
 			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-			temp_vertices.push_back(vertex);
+			tempVertices.push_back(vertex);
 		}
 		else if (strcmp(lineHeader, "vt") == 0) {
 			glm::vec2 uv;
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
 			uv.y = -uv.y; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
-			temp_uvs.push_back(uv);
+			tempUvs.push_back(uv);
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
 			glm::vec3 normal;
 			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-			temp_normals.push_back(normal);
+			tempNormals.push_back(normal);
 		}
 		else if (strcmp(lineHeader, "f") == 0) {
 			std::string vertex1, vertex2, vertex3;
@@ -106,19 +102,19 @@ bool loadOBJ(
 		unsigned int normalIndex = normalIndices[i];
 
 		// Get the attributes thanks to the index
-		glm::vec3 vertex = temp_vertices[vertexIndex - 1];
+		glm::vec3 vertex = tempVertices[vertexIndex - 1];
 
 		// Für Teddy-Obj-import ohne Normalen und UVs, TJ !!!!!!!!!!!!!!!!!!!!!
-		// glm::vec2 uv = temp_uvs[ uvIndex-1 ];
-		glm::vec2 uv = uvIndex ? temp_uvs[uvIndex - 1] : glm::vec2(0.0, 0.0);
+		// glm::vec2 uv = tempUvs[ uvIndex-1 ];
+		glm::vec2 uv = uvIndex ? tempUvs[uvIndex - 1] : glm::vec2(0.0, 0.0);
 
-		// glm::vec3 normal = temp_normals[ normalIndex-1 ];
-		glm::vec3 normal = normalIndex ? temp_normals[normalIndex - 1] : glm::vec3(0.0, 0.0, 0.0);
+		// glm::vec3 normal = tempNormals[ normalIndex-1 ];
+		glm::vec3 normal = normalIndex ? tempNormals[normalIndex - 1] : glm::vec3(0.0, 0.0, 0.0);
 
 		// Put the attributes in buffers
-		out_vertices.push_back(vertex);
-		out_uvs.push_back(uv);
-		out_normals.push_back(normal);
+		outVertices.push_back(vertex);
+		outUvs.push_back(uv);
+		outNormals.push_back(normal);
 
 	}
 
@@ -133,7 +129,7 @@ bool loadOBJ(
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
-bool loadAssImp(
+bool ObjectLoader::loadAssImp(const char* path, std::vector<unsigned short> &indices, std::vector<glm::vec3> &vertices, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals)
 	const char * path,
 	std::vector<unsigned short> & indices,
 	std::vector<glm::vec3> & vertices,

@@ -2,6 +2,9 @@
 class ThreeDimensionalObject
 {
 private:
+	ObjectLoader * objectLoader;
+	TextureLoader * textureLoader;
+
 	GLuint vertextArrayId;
 	GLuint texture;
 
@@ -13,7 +16,7 @@ private:
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
 public:
-	ThreeDimensionalObject(const char* filePath);
+	ThreeDimensionalObject(const char* filePath, ObjectLoader* objectLoader, TextureLoader* textureLoader);
 	~ThreeDimensionalObject();
 	void display();
 };
