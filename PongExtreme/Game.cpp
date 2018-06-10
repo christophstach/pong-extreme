@@ -26,7 +26,7 @@ int Game::init()
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		return -1;
 	}
-
+	glfwSetErrorCallback(this->logError);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -52,9 +52,25 @@ int Game::init()
 	// this->programId = this->shaderLoader->load("./resources/shaders/SimpleVertexShader.vertexshader", "./resources/shaders/SimpleFragmentShader.fragmentshader");
 	glUseProgram(this->programId);
 
+
+	// Ensure we can capture the escape key being pressed below
+	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
+	// Hide the mouse and enable unlimited mouvement
+	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// Set the mouse at the center of the screen
+	// glfwPollEvents();
+	glfwSetCursorPos(this->window, this->resolutionWidth / 2, this->resolutionHeight / 2);
+
+	/*glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scanCode, int action, int mode) {
+	
+	});*/ 
+
+	glfwSetKeyCallback(window, this->onKeyPress);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
 
 	glGenVertexArrays(1, &this->vertexArrayId);
 	glBindVertexArray(this->vertexArrayId);
@@ -66,17 +82,13 @@ int Game::init()
 
 void Game::runMainLoop()
 {
+	// float FoV = initialFoV - 5 * glfwGetMouseWheel();
 	Cube* cube = new Cube();
 	cube->init();
-
-	Triangle* triangle = new Triangle();
-	triangle->init();
 
 	do {
 		this->preMainLoop();
 		// ###################################################
-		
-		triangle->draw();
 		cube->draw();
 		// ###################################################
 		this->postMainLoop();
@@ -113,27 +125,16 @@ void Game::generateMvp() {
 }
 
 
-void Game::drawLeftBar()
-{
-}
 
-void Game::drawRightBar()
-{
-}
-
-void Game::drawBall()
-{
-}
-
-void logError(int error, const char * description)
-{
-	fputs(description, stderr);
-	printf("Error %d: %s \n", error, description);
-}
-
-void onKeyPress(GLFWwindow * window, int key, int scancode, int action, int mods)
+void Game::onKeyPress(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
 		printf("Key pressed!\n");
 	}
+}
+
+void Game::logError(int error, const char * description)
+{
+	fputs(description, stderr);
+	printf("Error %d: %s \n", error, description);
 }

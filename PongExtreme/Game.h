@@ -19,19 +19,20 @@ private:
 	glm::mat4 mvp;
 	GLuint vertexArrayId;
 
+	static void onKeyPress(GLFWwindow* window, int key, int scanCode, int action, int mode);
+	static void logError(int error, const char * description);
+
+	void generateMvp();
+	void sendMvp();
+
+	void preMainLoop();
+	void postMainLoop();
+
 public:
 	Game();
 	~Game();
 
 	int init();
-	void generateMvp();
-	void sendMvp();
 	void runMainLoop();
-	void preMainLoop();
-	void postMainLoop();
-
-	void drawLeftBar();
-	void drawRightBar();
-	void drawBall();
 };
 
