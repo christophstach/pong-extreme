@@ -56,15 +56,15 @@ int Game::init()
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
 	// Hide the mouse and enable unlimited mouvement
-	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	// glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Set the mouse at the center of the screen
 	// glfwPollEvents();
-	glfwSetCursorPos(this->window, this->resolutionWidth / 2, this->resolutionHeight / 2);
+	// glfwSetCursorPos(this->window, this->resolutionWidth / 2, this->resolutionHeight / 2);
 
 	/*glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scanCode, int action, int mode) {
-	
-	});*/ 
+
+	});*/
 
 	glfwSetKeyCallback(window, this->onKeyPress);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -128,9 +128,15 @@ void Game::generateMvp() {
 
 void Game::onKeyPress(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-		printf("Key pressed!\n");
-	}
+	key == GLFW_KEY_UP && action == GLFW_PRESS && printf("UP\n");
+	key == GLFW_KEY_DOWN && action == GLFW_PRESS && printf("DOWN\n");
+	key == GLFW_KEY_LEFT && action == GLFW_PRESS && printf("LEFT\n");
+	key == GLFW_KEY_RIGHT && action == GLFW_PRESS && printf("RIGHT\n");
+
+	key == GLFW_KEY_W && action == GLFW_PRESS && printf("W\n");
+	key == GLFW_KEY_S && action == GLFW_PRESS && printf("S\n");
+	key == GLFW_KEY_A && action == GLFW_PRESS && printf("A\n");
+	key == GLFW_KEY_D && action == GLFW_PRESS && printf("D\n");
 }
 
 void Game::logError(int error, const char * description)
