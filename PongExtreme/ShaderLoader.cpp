@@ -11,7 +11,7 @@ ShaderLoader::~ShaderLoader()
 {
 }
 
-GLuint* ShaderLoader::load(const char * vertexFilePath, const char * fragmentFilePath)
+GLuint ShaderLoader::load(const char * vertexFilePath, const char * fragmentFilePath)
 {
 	// Create the shaders
 	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -98,5 +98,5 @@ GLuint* ShaderLoader::load(const char * vertexFilePath, const char * fragmentFil
 	glDeleteShader(vertexShaderId);
 	glDeleteShader(fragmentShaderId);
 
-	return &programId;
+	return programId;
 }

@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{faef907b-7dde-4754-b592-dc87833a7f1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\objects">
+      <UniqueIdentifier>{cdb1e56c-63d3-4503-844e-554c1d833ea7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -37,6 +40,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,6 +71,12 @@
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -75,6 +90,12 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="resources\shaders\TransformVertexShader.vertexshader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="resources\shaders\SimpleFragmentShader.fragmentshader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="resources\shaders\SimpleVertexShader.vertexshader">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

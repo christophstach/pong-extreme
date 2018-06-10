@@ -28,7 +28,7 @@ bool ObjectLoader::load(const char* path, std::vector<glm::vec3> &outVertices, s
 		return false;
 	}
 
-	while (1) {
+	while (true) {
 
 		char lineHeader[128];
 		// read the first word of the line

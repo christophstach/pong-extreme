@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="ObjectLoader.h">
       <FileType>CppHeader</FileType>
@@ -157,8 +158,10 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="ThreeDimensionalObject.h" />
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="ObjectLoader.cpp" />
     <ClCompile Include="PongExtreme.cpp" />
@@ -171,10 +174,13 @@
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="ThreeDimensionalObject.cpp" />
+    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="resources\shaders\ColorFragmentShader.fragmentshader" />
+    <None Include="resources\shaders\SimpleFragmentShader.fragmentshader" />
+    <None Include="resources\shaders\SimpleVertexShader.vertexshader" />
     <None Include="resources\shaders\StandardShading.fragmentshader" />
     <None Include="resources\shaders\StandardShading.vertexshader" />
     <None Include="resources\shaders\TransformVertexShader.vertexshader" />

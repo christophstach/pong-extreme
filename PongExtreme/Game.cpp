@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Game.h"
 
 
@@ -12,7 +12,6 @@ Game::Game()
 Game::~Game()
 {
 	delete this->window;
-	delete this->programId;
 	delete this->shaderLoader;
 	delete this->textureLoader;
 	delete this->objectLoader;
@@ -20,65 +19,99 @@ Game::~Game()
 
 int Game::init()
 {
-	printf("Initializing...\n");
-	glfwInit() || fprintf(stderr, "Failed to initialize GLFW");
-	glfwSetErrorCallback(logError);
-
-	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
-
-	this->window = glfwCreateWindow(1024, 768, "Pong Extreme", NULL, NULL);
-
-	if (!this->window)
+	// Initialise GLFW
+	glewExperimental = true; // Needed for core profile
+	if (!glfwInit())
 	{
+		fprintf(stderr, "Failed to initialize GLFW\n");
+		return -1;
+	}
+
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	this->window = glfwCreateWindow(this->resolutionWidth, this->resolutionHeight, "Pong Extreme", NULL, NULL);
+	if (this->window == NULL) {
+		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
-		exit(EXIT_FAILURE);
+		return -1;
 	}
 
 	glfwMakeContextCurrent(this->window);
-	glewExperimental = true; // Needed for core profile
 
-	if (glewInit() != GLEW_OK)
-	{
+	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
 	}
 
-	glfwSetKeyCallback(this->window, onKeyPress);
+	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
+	// this->programId = this->shaderLoader->load("./resources/shaders/StandardShading.vertexshader", "./resources/shaders/StandardShading.fragmentshader");
+	this->programId = this->shaderLoader->load("./resources/shaders/TransformVertexShader.vertexshader", "./resources/shaders/ColorFragmentShader.fragmentshader");
+	// this->programId = this->shaderLoader->load("./resources/shaders/SimpleVertexShader.vertexshader", "./resources/shaders/SimpleFragmentShader.fragmentshader");
+	glUseProgram(this->programId);
 
-	/*
-	this->programId = this->shaderLoader->load(
-		"resources/shaders/StandardShading.vertexshader", 
-		"resources/shaders/StandardShading.fragmentshader"
-	);
-	*/
-
-	this->programId = this->shaderLoader->load(
-		"resources/shaders/TransformVertexShader.vertexshader",
-		"resources/shaders/ColorFragmentShader.fragmentshader"
-	);
-
-	glUseProgram(*this->programId);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	printf("Finished initializing...\n");
+	glGenVertexArrays(1, &this->vertexArrayId);
+	glBindVertexArray(this->vertexArrayId);
+
+	this->generateMvp();
+
 	return 0;
 }
 
 void Game::runMainLoop()
 {
-	printf("Running main loop...\n");
-	while (!glfwWindowShouldClose(this->window))
-	{
-		glfwSwapBuffers(this->window); // Swap buffers
-		glfwPollEvents(); // Poll for and process events 
-	}
+	Cube* cube = new Cube();
+	cube->init();
+
+	Triangle* triangle = new Triangle();
+	triangle->init();
+
+	do {
+		this->preMainLoop();
+		// ###################################################
+		
+		triangle->draw();
+		cube->draw();
+		// ###################################################
+		this->postMainLoop();
+	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
 }
+
+void Game::preMainLoop()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+}
+
+void Game::postMainLoop()
+{
+	this->sendMvp();
+	glfwSwapBuffers(this->window);
+	glfwPollEvents();
+}
+
+void Game::sendMvp() {
+	this->mvp = this->projection * this->view * this->model;
+	glUniformMatrix4fv(glGetUniformLocation(this->programId, "MVP"), 1, GL_FALSE, &this->mvp[0][0]);
+}
+
+void Game::generateMvp() {
+	this->projection = glm::perspective(glm::radians(45.0f), (float)this->resolutionWidth / (float)this->resolutionHeight, 0.1f, 100.0f);
+	this->view = glm::lookAt(
+		glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
+		glm::vec3(0, 0, 0), // and looks at the origin
+		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+	);
+	this->model = glm::mat4(1.0f);
+	this->mvp = this->projection * this->view * this->model;
+}
+
 
 void Game::drawLeftBar()
 {

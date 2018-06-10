@@ -9,7 +9,7 @@ ThreeDimensionalObject::ThreeDimensionalObject(const char* filePath, ObjectLoade
 
 	this->objectLoader->load(filePath, vertices, uvs, normals);
 	// Load the texture
-	texture = this->textureLoader->loadCustomBmp("mandrill.bmp");
+	// texture = this->textureLoader->loadCustomBmp("mandrill.bmp");
 
 	glGenVertexArrays(1, &vertextArrayId);
 	glBindVertexArray(vertextArrayId);
