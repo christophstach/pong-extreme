@@ -1,7 +1,5 @@
 #pragma once
 
-void logError(int error, const char* description);
-void onKeyPress(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 class Game
 {
@@ -19,14 +17,28 @@ private:
 	glm::mat4 mvp;
 	GLuint vertexArrayId;
 
-	static void onKeyPress(GLFWwindow* window, int key, int scanCode, int action, int mode);
-	static void logError(int error, const char * description);
+	glm::vec3 position = glm::vec3(0, 0, 5);
+	float horizontalAngle = 3.14f;
+	float verticalAngle = 0.0f;
+	float initialFieldofView = 45.0f;
+	float speed = 3.0f;
+	float mouseSpeed = 0.005f;
+
+
+	void onKeyPress(GLFWwindow* window, int key, int scanCode, int action, int mode);
+	void logError(int error, const char * description);
 
 	void generateMvp();
 	void sendMvp();
 
 	void preMainLoop();
 	void postMainLoop();
+
+	void computeMatricesFromInputs();
+	glm::mat4 getProjectionMatrix();
+	glm::mat4 getViewMatrix();
+
+	void test();
 
 public:
 	Game();
