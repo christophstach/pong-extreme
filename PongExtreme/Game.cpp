@@ -1,6 +1,14 @@
 ﻿#include "stdafx.h"
 #include "Game.h"
 
+float fieldOfView = 45.0f;
+float leftBarPosition = 0;
+float rightBarPosition = 0;
+
+bool upPressed = false;
+bool downPressed = false;
+bool wPressed = false;
+bool sPressed = false;
 
 Game::Game()
 {
@@ -19,9 +27,7 @@ Game::~Game()
 
 int Game::init()
 {
-
-	// Initialise GLFW
-	glewExperimental = true; // Needed for core profile
+	glewExperimental = true;
 	if (!glfwInit())
 	{
 		fprintf(stderr, "Failed to initialize GLFW\n");
@@ -42,7 +48,6 @@ int Game::init()
 		glfwTerminate();
 		return -1;
 	}
-
 	glfwMakeContextCurrent(this->window);
 
 	if (glewInit() != GLEW_OK) {
@@ -59,6 +64,7 @@ int Game::init()
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
+
 	// Hide the mouse and enable unlimited mouvement
 	// glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -71,6 +77,12 @@ int Game::init()
 		game.onKeyPress(window, key, scanCode, action, mode);
 	});
 
+	glfwSetScrollCallback(window, [](GLFWwindow * window, double xOffset, double yOffset) {
+		Game game;
+		game.onMouseScroll(window, xOffset, yOffset);
+	});
+	// glfwSetMouseButtonCallback(widnow, new GLFWmousebuttonfun)
+
 
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -80,15 +92,11 @@ int Game::init()
 	glGenVertexArrays(1, &this->vertexArrayId);
 	glBindVertexArray(this->vertexArrayId);
 
-
-
 	return 0;
 }
 
 void Game::runMainLoop()
 {
-	glm::mat4 savedModel;
-	// float FoV = initialFoV - 5 * glfwGetMouseWheel();
 	LeftBar* leftBar = new LeftBar();
 	RightBar* rightBar = new RightBar();
 	leftBar->init();
@@ -97,20 +105,8 @@ void Game::runMainLoop()
 	do {
 		this->preMainLoop();
 		// ###################################################
-
-		savedModel = this->model;
-		this->model = leftBar->draw(this->model);
-		this->sendMvp();
-		this->model = savedModel;
-
-		savedModel = this->model;
-		this->model = rightBar->draw(this->model);
-		this->sendMvp();
-		//this->model = savedModel;
-		
-		//this->model = glm::translate(this->model, glm::vec3(0.0f, 0.0f, 8.0f));
-		//this->model = glm::scale(this->model, glm::vec3(5.0f, 1.0f, 1.0f));
-		
+		this->handleDraw(leftBar->draw(this->model, leftBarPosition));
+		this->handleDraw(rightBar->draw(this->model, rightBarPosition));
 		// ###################################################
 		this->postMainLoop();
 	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
@@ -120,11 +116,11 @@ void Game::preMainLoop()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	this->generateMvp();
+	this->handleKeys();
 }
 
 void Game::postMainLoop()
 {
-	this->sendMvp();
 	glfwSwapBuffers(this->window);
 	glfwPollEvents();
 }
@@ -159,11 +155,24 @@ void Game::sendMvp() {
 	glUniformMatrix4fv(glGetUniformLocation(this->programId, "MVP"), 1, GL_FALSE, &this->mvp[0][0]);
 }
 
+void Game::handleDraw(glm::mat4 model)
+{
+	this->savedModel = this->model;
+	this->model = model;
+	this->sendMvp();
+	this->model = this->savedModel;
+}
+
 void Game::generateMvp() {
-	this->computeMatricesFromInputs();
-	this->projection = glm::perspective(glm::radians(45.0f), (float)this->resolutionWidth / (float)this->resolutionHeight, 0.1f, 100.0f);
+
+	this->projection = glm::perspective(
+		glm::radians(fieldOfView),
+		(float)this->resolutionWidth / (float)this->resolutionHeight,
+		0.1f,
+		100.0f
+	);
 	this->view = glm::lookAt(
-		glm::vec3(20, 5, 0),
+		glm::vec3(25, 25, 0),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	);
@@ -173,19 +182,45 @@ void Game::generateMvp() {
 
 void Game::onKeyPress(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
-	key == GLFW_KEY_UP && action == GLFW_PRESS && printf("UP\n");
-	key == GLFW_KEY_DOWN && action == GLFW_PRESS && printf("DOWN\n");
-	key == GLFW_KEY_LEFT && action == GLFW_PRESS && printf("LEFT\n");
-	key == GLFW_KEY_RIGHT && action == GLFW_PRESS && printf("RIGHT\n");
+	key == GLFW_KEY_UP && action == GLFW_PRESS && (upPressed = true);
+	key == GLFW_KEY_UP && action == GLFW_RELEASE && (upPressed = false);
 
-	key == GLFW_KEY_W && action == GLFW_PRESS && printf("W\n");
-	key == GLFW_KEY_S && action == GLFW_PRESS && printf("S\n");
-	key == GLFW_KEY_A && action == GLFW_PRESS && printf("A\n");
-	key == GLFW_KEY_D && action == GLFW_PRESS && printf("D\n");
+	key == GLFW_KEY_DOWN && action == GLFW_PRESS && (downPressed = true);
+	key == GLFW_KEY_DOWN && action == GLFW_RELEASE && (downPressed = false);
+
+	key == GLFW_KEY_W && action == GLFW_PRESS && (wPressed = true);
+	key == GLFW_KEY_W && action == GLFW_RELEASE && (wPressed = false);
+
+	key == GLFW_KEY_S && action == GLFW_PRESS && (sPressed = true);
+	key == GLFW_KEY_S && action == GLFW_RELEASE && (sPressed = false);
+}
+
+void Game::onMouseKeyPress(GLFWwindow * window, int button, int action, int mods)
+{
+}
+
+void Game::onMouseCursorMove(GLFWwindow * window, double xPosition, double yPosition)
+{
+	printf("Position: (%f, %f)\n", xPosition, yPosition);
+}
+
+void Game::onMouseScroll(GLFWwindow * window, double xOffset, double yOffset)
+{
+	fieldOfView -= yOffset;
 }
 
 void Game::logError(int error, const char * description)
 {
 	fputs(description, stderr);
 	printf("Error %d: %s \n", error, description);
+}
+
+void Game::handleKeys()
+{
+	const float modifier = 0.1f;
+
+	wPressed && (leftBarPosition -= modifier);
+	sPressed && (leftBarPosition += modifier);
+	upPressed && (rightBarPosition -= modifier);
+	downPressed && (rightBarPosition += modifier);
 }

@@ -7,6 +7,6 @@ public:
 	~RightBar();
 
 	void init();
-	glm::mat4 draw(glm::mat4 model);
+	glm::mat4 draw(glm::mat4 model, float position);
 };
 
