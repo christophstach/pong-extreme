@@ -2,25 +2,25 @@
 #include "RightBar.h"
 
 
-RightBar::RightBar()
+RightBar::RightBar(GLuint vao)
 {
-	this->cube = new Cube();
+	this->vao = vao;
+	this->cube = new Cube(this->vao);
 }
 
-
-RightBar::~RightBar()
+glm::mat4 RightBar::transform(glm::mat4 model)
 {
-}
-
-void RightBar::init()
-{
-	this->cube->init();
-}
-
-glm::mat4 RightBar::draw(glm::mat4 model, float position)
-{
-	this->cube->draw();
-	model = glm::translate(model, glm::vec3(position, 0.0f, -16.0f));
+	model = glm::translate(model, glm::vec3(this->position, 0.0f, -16.0f));
 	model = glm::scale(model, glm::vec3(4.0f, 0.8f, 0.2f));
 	return model;
+}
+
+void RightBar::setPosition(float position)
+{
+	this->position = position;
+}
+
+void RightBar::draw()
+{
+	this->cube->draw();
 }

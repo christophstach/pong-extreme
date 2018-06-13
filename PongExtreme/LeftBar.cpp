@@ -2,25 +2,25 @@
 #include "LeftBar.h"
 
 
-LeftBar::LeftBar()
+LeftBar::LeftBar(GLuint vao)
 {
-	this->cube = new Cube();
+	this->vao = vao;
+	this->cube = new Cube(this->vao);
 }
 
-
-LeftBar::~LeftBar()
+glm::mat4 LeftBar::transform(glm::mat4 model) 
 {
-}
-
-void LeftBar::init()
-{
-	this->cube->init();
-}
-
-glm::mat4 LeftBar::draw(glm::mat4 model, float position)
-{
-	this->cube->draw();
-	model = glm::translate(model, glm::vec3(position, 0.0f, 16.0f));
+	model = glm::translate(model, glm::vec3(this->position, 0.0f, 16.0f));
 	model = glm::scale(model, glm::vec3(4.0f, 0.8f, 0.2f));
 	return model;
+}
+
+void LeftBar::setPosition(float position)
+{
+	this->position = position;
+}
+
+void LeftBar::draw()
+{
+	this->cube->draw();
 }

@@ -1,13 +1,13 @@
 #pragma once
 class Cube
 {
-private: 
-	GLuint colorBuffer;
+private:
+	GLuint vao;
 	GLuint vertexBuffer;
+	GLuint colorBuffer;
 public:
-	void init();
-	void draw();
-	Cube();
+	Cube(GLuint vao);
 	~Cube();
+	void draw();
 };
 

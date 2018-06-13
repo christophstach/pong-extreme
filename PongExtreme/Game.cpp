@@ -33,10 +33,12 @@ int Game::init()
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		return -1;
 	}
+
 	glfwSetErrorCallback([](int error, const char * description) {
 		Game game;
 		game.logError(error, description);
 	});
+
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -62,51 +64,50 @@ int Game::init()
 	glUseProgram(this->programId);
 
 
-	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
-
-	// Hide the mouse and enable unlimited mouvement
-	// glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	// Set the mouse at the center of the screen
-	// glfwPollEvents();
+	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPos(this->window, this->resolutionWidth / 2, this->resolutionHeight / 2);
 
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scanCode, int action, int mode) {
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scanCode, int action, int mods) {
 		Game game;
-		game.onKeyPress(window, key, scanCode, action, mode);
+		game.onKeyPress(window, key, scanCode, action, mods);
 	});
 
 	glfwSetScrollCallback(window, [](GLFWwindow * window, double xOffset, double yOffset) {
 		Game game;
 		game.onMouseScroll(window, xOffset, yOffset);
 	});
-	// glfwSetMouseButtonCallback(widnow, new GLFWmousebuttonfun)
+
+	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
+		Game game;
+		game.onMouseButtonClick(window, button, action, mods);
+	});
 
 
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
-
-	glGenVertexArrays(1, &this->vertexArrayId);
-	glBindVertexArray(this->vertexArrayId);
+	glGenVertexArrays(NumberVaos, this->vaos);
 
 	return 0;
 }
 
 void Game::runMainLoop()
 {
-	LeftBar* leftBar = new LeftBar();
-	RightBar* rightBar = new RightBar();
-	leftBar->init();
-	rightBar->init();
+	LeftBar* leftBar = new LeftBar(this->vaos[Vao::LeftBarObject]);
+	RightBar* rightBar = new RightBar(this->vaos[Vao::RightBarObject]);
+	ThreeDimensional* ball = new Ball(this->vaos[Vao::BallObject]);
 
 	do {
 		this->preMainLoop();
 		// ###################################################
-		this->handleDraw(leftBar->draw(this->model, leftBarPosition));
-		this->handleDraw(rightBar->draw(this->model, rightBarPosition));
+		leftBar->setPosition(leftBarPosition);
+		rightBar->setPosition(rightBarPosition);
+
+		this->handleDraw(leftBar);
+		this->handleDraw(rightBar);
+		this->handleDraw(ball);
 		// ###################################################
 		this->postMainLoop();
 	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
@@ -138,16 +139,58 @@ glm::mat4 Game::getViewMatrix()
 {
 	return this->view;
 }
+std::vector<glm::vec3> vertices;
+std::vector<glm::vec2> uvs;
+std::vector<glm::vec3> normals; // Won't be used at the moment.
+GLuint vertexbuffer;
+GLuint uvbuffer;
+GLuint VertexArrayIDTeapot;
+
+void Game::initTest() {
+	// Load the texture
+	this->testTexture = this->textureLoader->loadCustomBmp("./resources/bitmaps/mandrill.bmp");
+
+	// Get a handle for our "myTextureSampler" uniform
+	this->testTexture = glGetUniformLocation(this->programId, "myTextureSampler");
+	this->objectLoader->load("./resources/objects/teapot.obj", vertices, uvs, normals);
+
+
+
+	// Jedes Objekt eigenem VAO zuordnen, damit mehrere Objekte moeglich sind
+	// VAOs sind Container fuer mehrere Buffer, die zusammen gesetzt werden sollen.
+
+	glGenVertexArrays(1, &VertexArrayIDTeapot);
+	glBindVertexArray(VertexArrayIDTeapot);
+
+	// Ein ArrayBuffer speichert Daten zu Eckpunkten (hier xyz bzw. Position)
+	GLuint vertexbuffer;
+	glGenBuffers(1, &vertexbuffer); // Kennung erhalten
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer); // Daten zur Kennung definieren
+												 // Buffer zugreifbar f�r die Shader machen
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+
+	// Erst nach glEnableVertexAttribArray kann DrawArrays auf die Daten zugreifen...
+	glEnableVertexAttribArray(0); // siehe layout im vertex shader: location = 0 
+	glVertexAttribPointer(0,  // location = 0 
+		3,  // Datenformat vec3: 3 floats fuer xyz 
+		GL_FLOAT,
+		GL_FALSE, // Fixedpoint data normalisieren ?
+		0, // Eckpunkte direkt hintereinander gespeichert
+		(void*)0); // abweichender Datenanfang ? 
+
+}
 
 void Game::test()
 {
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals; // Won't be used at the moment.
 
-	this->objectLoader->load("./resources/objects/dragon.obj", vertices, uvs, normals);
 
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+
+	glBindVertexArray(VertexArrayIDTeapot);
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+
+
+
+
 }
 
 void Game::sendMvp() {
@@ -155,16 +198,15 @@ void Game::sendMvp() {
 	glUniformMatrix4fv(glGetUniformLocation(this->programId, "MVP"), 1, GL_FALSE, &this->mvp[0][0]);
 }
 
-void Game::handleDraw(glm::mat4 model)
+void Game::handleDraw(ThreeDimensional* threeDimensional)
 {
-	this->savedModel = this->model;
-	this->model = model;
+	this->model = threeDimensional->transform(this->model);
 	this->sendMvp();
-	this->model = this->savedModel;
+	this->model = glm::mat4(1.0f);
+	threeDimensional->draw();
 }
 
 void Game::generateMvp() {
-
 	this->projection = glm::perspective(
 		glm::radians(fieldOfView),
 		(float)this->resolutionWidth / (float)this->resolutionHeight,
@@ -195,7 +237,8 @@ void Game::onKeyPress(GLFWwindow * window, int key, int scancode, int action, in
 	key == GLFW_KEY_S && action == GLFW_RELEASE && (sPressed = false);
 }
 
-void Game::onMouseKeyPress(GLFWwindow * window, int button, int action, int mods)
+
+void Game::onMouseButtonClick(GLFWwindow * window, int button, int action, int mods)
 {
 }
 

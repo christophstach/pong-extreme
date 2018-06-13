@@ -2,18 +2,9 @@
 #include "Cube.h"
 
 
-Cube::Cube()
+Cube::Cube(GLuint vao)
 {
-}
-
-
-Cube::~Cube()
-{
-}
-
-
-void Cube::init()
-{
+	this->vao = vao;
 	const GLfloat vertexBufferData[] = {
 		-1.0f,-1.0f,-1.0f,
 		-1.0f,-1.0f, 1.0f,
@@ -53,7 +44,7 @@ void Cube::init()
 		1.0f,-1.0f, 1.0f
 	};
 
-	static const GLfloat colorBufferData[] = {
+	const GLfloat colorBufferData[] = {
 		0.583f,  0.771f,  0.014f,
 		0.609f,  0.115f,  0.436f,
 		0.327f,  0.483f,  0.844f,
@@ -91,19 +82,29 @@ void Cube::init()
 		0.820f,  0.883f,  0.371f,
 		0.982f,  0.099f,  0.879f
 	};
+	glBindVertexArray(this->vao);
 
 	glGenBuffers(1, &this->vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
 
-
 	glGenBuffers(1, &this->colorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorBufferData), colorBufferData, GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+}
+
+
+Cube::~Cube()
+{
+
 }
 
 void Cube::draw()
 {
+	glBindVertexArray(this->vao);
+
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -113,7 +114,8 @@ void Cube::draw()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
-
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+
+	glBindVertexArray(0);
 }
