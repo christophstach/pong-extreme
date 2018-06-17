@@ -5,19 +5,16 @@ private:
 	ObjectLoader * objectLoader;
 	TextureLoader * textureLoader;
 
-	GLuint vertextArrayId;
+	GLuint vao;
 	GLuint texture;
 
-	GLuint normalBuffer; // Hier alles analog für Normalen in location == 2
 	GLuint vertexBuffer;
-	GLuint uvBuffer; // Hier alles analog für Texturkoordinaten in location == 1 (2 floats u und v!)
+	GLuint uvBuffer; 
+	GLuint normalBuffer;
 
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
+	int vertexBufferDataSize;
 public:
-	ThreeDimensionalObject(const char* filePath, ObjectLoader* objectLoader, TextureLoader* textureLoader);
-	~ThreeDimensionalObject();
-	void display();
+	ThreeDimensionalObject(GLuint vao, const char* filePath, ObjectLoader* objectLoader, TextureLoader* textureLoader);
+	void draw();
 };
 

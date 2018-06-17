@@ -151,7 +151,9 @@
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Lamp.h" />
     <ClInclude Include="LeftBar.h" />
+    <ClInclude Include="ObjectDefinition.h" />
     <ClInclude Include="ObjectLoader.h">
       <FileType>CppHeader</FileType>
     </ClInclude>
@@ -160,6 +162,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Arena.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="ThreeDimensional.h" />
     <ClInclude Include="ThreeDimensionalObject.h" />
@@ -170,7 +173,9 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Lamp.cpp" />
     <ClCompile Include="LeftBar.cpp" />
+    <ClCompile Include="ObjectDefinition.cpp" />
     <ClCompile Include="ObjectLoader.cpp" />
     <ClCompile Include="PongExtreme.cpp" />
     <ClCompile Include="RightBar.cpp" />
@@ -182,6 +187,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Arena.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="ThreeDimensional.cpp" />
     <ClCompile Include="ThreeDimensionalObject.cpp" />

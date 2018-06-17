@@ -28,7 +28,7 @@ void Triangle::draw()
 		(void*)0            // array buffer offset
 	);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertexBufferData total -> 1 triangle
 	glDisableVertexAttribArray(0);
 }
 

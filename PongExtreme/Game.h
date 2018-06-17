@@ -7,7 +7,7 @@ public:
 	Game();
 	~Game();
 
-	int init();
+	void init();
 	void runMainLoop();
 
 private:
@@ -16,8 +16,8 @@ private:
 
 	GLuint vaos[NumberVaos];
 
-	GLFWwindow * window;
 	GLuint programId;
+	GLFWwindow * window;
 	ShaderLoader* shaderLoader;
 	TextureLoader* textureLoader;
 	ObjectLoader* objectLoader;
@@ -41,16 +41,4 @@ private:
 
 	void preMainLoop();
 	void postMainLoop();
-
-	void computeMatricesFromInputs();
-	glm::mat4 getProjectionMatrix();
-	glm::mat4 getViewMatrix();
-
-	void initTest();
-	void test();
-	GLuint testTexture;
-	GLuint testTextureId;
-
-
-
 };

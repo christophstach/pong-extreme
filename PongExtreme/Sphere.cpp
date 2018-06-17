@@ -48,10 +48,12 @@ Sphere::Sphere(GLuint vao, GLuint lats, GLuint longs)
 	glGenBuffers(1, &this->vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * (this->lats + 1) * (this->longs + 1), this->vertexBufferData, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glGenBuffers(1, &this->normalBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->normalBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * (this->lats + 1) * (this->longs + 1), this->normalBufferData, GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glBindVertexArray(0);
 }
@@ -65,15 +67,8 @@ void Sphere::draw()
 {
 	glBindVertexArray(this->vao);
 
-	
-	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->normalBuffer);
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 2 * (this->lats + 1) * (this->longs + 1));
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(2);
