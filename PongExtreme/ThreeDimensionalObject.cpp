@@ -2,12 +2,13 @@
 #include "ThreeDimensionalObject.h"
 
 
-ThreeDimensionalObject::ThreeDimensionalObject(GLuint vao, const char* filePath, ObjectLoader* objectLoader, TextureLoader* textureLoader)
+ThreeDimensionalObject::ThreeDimensionalObject(GLuint programId, GLuint vao, const char* objectPath, const char* texturePath, ObjectLoader* objectLoader)
 {
-	this->textureLoader = textureLoader;
+	this->vao = vao;
+	this->programId = programId;
 	this->objectLoader = objectLoader;
-	
-	ObjectDefinition* objectDefinition = this->objectLoader->load(filePath);
+
+	ObjectDefinition* objectDefinition = this->objectLoader->load(objectPath);
 	this->vertexBufferDataSize = objectDefinition->vertexBufferData.size();
 
 	glBindVertexArray(this->vao);
@@ -29,6 +30,14 @@ ThreeDimensionalObject::ThreeDimensionalObject(GLuint vao, const char* filePath,
 	glBufferData(GL_ARRAY_BUFFER, objectDefinition->normalBufferData.size() * sizeof(glm::vec3), &objectDefinition->normalBufferData[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	if (texturePath) {
+		this->texture = new Texture(texturePath);
+		this->texture->bind(0);
+		glUniform1i(glGetUniformLocation(this->programId, "myTextureSampler"), 0);
+	}
+
+	glBindVertexArray(0);
 }
 
 
@@ -39,10 +48,13 @@ void ThreeDimensionalObject::draw()
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+
 	glDrawArrays(GL_TRIANGLES, 0, this->vertexBufferDataSize);
+	
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	
 
 	glBindVertexArray(0);
 }

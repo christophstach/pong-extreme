@@ -3,18 +3,18 @@ class ThreeDimensionalObject
 {
 private:
 	ObjectLoader * objectLoader;
-	TextureLoader * textureLoader;
+	GLuint programId;
 
 	GLuint vao;
-	GLuint texture;
+	Texture* texture;
 
 	GLuint vertexBuffer;
-	GLuint uvBuffer; 
+	GLuint uvBuffer;
 	GLuint normalBuffer;
 
 	int vertexBufferDataSize;
 public:
-	ThreeDimensionalObject(GLuint vao, const char* filePath, ObjectLoader* objectLoader, TextureLoader* textureLoader);
+	ThreeDimensionalObject(GLuint programmid, GLuint vao, const char* objectPath, const char* texturePath, ObjectLoader* objectLoader);
 	void draw();
 };
 

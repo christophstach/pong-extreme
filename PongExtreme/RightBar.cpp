@@ -2,10 +2,11 @@
 #include "RightBar.h"
 
 
-RightBar::RightBar(GLuint vao)
+RightBar::RightBar(GLuint programId, GLuint vao, ObjectLoader* objectLoader)
 {
+	this->programId = programId;
 	this->vao = vao;
-	this->cube = new Cube(this->vao);
+	this->object = new ThreeDimensionalObject(this->programId, this->vao, "./resources/objects/cube.obj", NULL, objectLoader);
 }
 
 glm::mat4 RightBar::transform(glm::mat4 model)
@@ -22,5 +23,5 @@ void RightBar::setPosition(float position)
 
 void RightBar::draw()
 {
-	this->cube->draw();
+	this->object->draw();
 }

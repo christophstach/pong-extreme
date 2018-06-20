@@ -2,11 +2,12 @@
 class RightBar: public ThreeDimensional
 {
 private:
+	GLuint programId;
 	GLuint vao;
-	Cube * cube;
+	ThreeDimensionalObject* object;
 	float position = 0;
 public:
-	RightBar(GLuint vao);
+	RightBar(GLuint programId, GLuint vao, ObjectLoader* objectLoader);
 	glm::mat4 transform(glm::mat4 model);
 	void setPosition(float position);
 	void draw();

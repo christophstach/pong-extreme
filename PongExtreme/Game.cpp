@@ -86,13 +86,14 @@ void Game::init()
 
 void Game::runMainLoop()
 {
+
+	Ball* ball = new Ball(this->programId, this->vaos[Vao::BallObject], this->objectLoader);
+	Arena* arena = new Arena(this->programId, this->vaos[Vao::ArenaObject], this->objectLoader);
+	LeftBar* leftBar = new LeftBar(this->programId, this->vaos[Vao::LeftBarObject], this->objectLoader);
+	RightBar* rightBar = new RightBar(this->programId, this->vaos[Vao::RightBarObject], this->objectLoader);
 	
-	LeftBar* leftBar = new LeftBar(this->vaos[Vao::LeftBarObject]);
-	RightBar* rightBar = new RightBar(this->vaos[Vao::RightBarObject]);
-	ThreeDimensional* ball = new Ball(this->vaos[Vao::BallObject]);
-	ThreeDimensional* lamp = new Lamp(this->vaos[Vao::LampObject]);
+
 	
-	Arena* arena = new Arena(this->vaos[Vao::ArenaObject], this->objectLoader, this->textureLoader);
 
 	do {
 		this->preMainLoop();
@@ -100,12 +101,12 @@ void Game::runMainLoop()
 		leftBar->setPosition(leftBarPosition);
 		rightBar->setPosition(rightBarPosition);
 
-		this->handleDraw(arena);
+		
 		this->handleDraw(leftBar);
 		this->handleDraw(rightBar);
+		this->handleDraw(arena);
 		this->handleDraw(ball);
-		this->handleDraw(lamp);
-		
+
 		// ###################################################
 		this->postMainLoop();
 	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
@@ -129,11 +130,13 @@ void Game::postMainLoop()
 
 void Game::sendMvp() {
 	this->mvp = this->projection * this->view * this->model;
+	glm::vec3 lightPosition = glm::vec3(25.0, 15.0, 0.0);
 
 	glUniformMatrix4fv(glGetUniformLocation(this->programId, "MVP"), 1, GL_FALSE, &this->mvp[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(this->programId, "M"), 1, GL_FALSE, &this->model[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(this->programId, "V"), 1, GL_FALSE, &this->view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(this->programId, "P"), 1, GL_FALSE, &this->projection[0][0]);
+	glUniform3f(glGetUniformLocation(this->programId, "LightPosition_worldspace"), lightPosition.x, lightPosition.y, lightPosition.z);
 }
 
 void Game::handleDraw(ThreeDimensional* threeDimensional)
@@ -151,16 +154,15 @@ void Game::generateMvp() {
 		0.1f,
 		100.0f
 	);
-	
+
 	this->view = glm::lookAt(
 		glm::vec3(25, 25, 0),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	);
-	glm::vec3 lightPos = glm::vec3(0, 5, 0);
-	glUniform3f(glGetUniformLocation(this->programId, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
 	this->model = glm::mat4(1.0f);
 	this->mvp = this->projection * this->view * this->model;
+
 }
 
 void Game::onKeyPress(GLFWwindow * window, int key, int scancode, int action, int mods)

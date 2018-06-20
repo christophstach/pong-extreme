@@ -2,10 +2,11 @@
 #include "LeftBar.h"
 
 
-LeftBar::LeftBar(GLuint vao)
+LeftBar::LeftBar(GLuint programId, GLuint vao, ObjectLoader* objectLoader)
 {
+	this->programId = programId;
 	this->vao = vao;
-	this->cube = new Cube(this->vao);
+	this->object = new ThreeDimensionalObject(this->programId, this->vao, "./resources/objects/cube.obj", NULL, objectLoader);
 }
 
 glm::mat4 LeftBar::transform(glm::mat4 model) 
@@ -22,5 +23,5 @@ void LeftBar::setPosition(float position)
 
 void LeftBar::draw()
 {
-	this->cube->draw();
+	this->object->draw();
 }

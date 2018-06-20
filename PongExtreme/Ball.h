@@ -2,10 +2,11 @@
 class Ball: public ThreeDimensional
 {
 private:
+	GLuint programId;
 	GLuint vao;
-	Sphere * sphere;
+	ThreeDimensionalObject* object;
 public:
-	Ball(GLuint vao);
+	Ball(GLuint programId, GLuint vao, ObjectLoader* objectLoader);
 	glm::mat4 transform(glm::mat4 model);
 	void draw();
 };

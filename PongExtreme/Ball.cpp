@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "Ball.h"
 
-Ball::Ball(GLuint vao)
+Ball::Ball(GLuint programId, GLuint vao, ObjectLoader* objectLoader)
 {
+	this->programId = programId;
 	this->vao = vao;
-	this->sphere = new Sphere(this->vao, 50, 50);
+	this->object = new ThreeDimensionalObject(this->programId,  this->vao, "./resources/objects/sphere.obj", NULL, objectLoader);
 }
 
 glm::mat4 Ball::transform(glm::mat4 model)
@@ -14,7 +15,7 @@ glm::mat4 Ball::transform(glm::mat4 model)
 
 void Ball::draw()
 {
-	this->sphere->draw();
+	this->object->draw();
 }
 
 
