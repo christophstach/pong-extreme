@@ -2,11 +2,9 @@
 #include "Arena.h"
 
 
-Arena::Arena(GLuint programId, GLuint vao, ObjectLoader* objectLoader)
+Arena::Arena(ObjectLoader* objectLoader, GLuint vao)
 {
-	this->programId = programId;
-	this->vao = vao;
-	this->object = new ThreeDimensionalObject(this->programId, this->vao, "./resources/objects/arena.obj", "./resources/textures/mandrill.bmp", objectLoader);
+	this->object = new ThreeDimensionalObject(objectLoader, vao, "./resources/objects/arena.obj");
 }
 
 glm::mat4 Arena::transform(glm::mat4 model)

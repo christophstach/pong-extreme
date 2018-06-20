@@ -15,8 +15,9 @@ private:
 	const int resolutionHeight = 900;
 
 	GLuint vaos[NumberVaos];
+	GLuint taos[NumberTaos];
 
-	GLuint programId;
+	GLuint shaderId;
 	GLFWwindow * window;
 	ShaderLoader* shaderLoader;
 	TextureLoader* textureLoader;
@@ -37,7 +38,7 @@ private:
 
 	void generateMvp();
 	void sendMvp();
-	void handleDraw(ThreeDimensional* threeDimensional);
+	void handleDraw(ThreeDimensional* threeDimensional, GLuint texture);
 
 	void preMainLoop();
 	void postMainLoop();

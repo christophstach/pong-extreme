@@ -2,10 +2,9 @@
 #include "ThreeDimensionalObject.h"
 
 
-ThreeDimensionalObject::ThreeDimensionalObject(GLuint programId, GLuint vao, const char* objectPath, const char* texturePath, ObjectLoader* objectLoader)
+ThreeDimensionalObject::ThreeDimensionalObject(ObjectLoader* objectLoader, GLuint vao, const char* objectPath)
 {
 	this->vao = vao;
-	this->programId = programId;
 	this->objectLoader = objectLoader;
 
 	ObjectDefinition* objectDefinition = this->objectLoader->load(objectPath);
@@ -31,12 +30,6 @@ ThreeDimensionalObject::ThreeDimensionalObject(GLuint programId, GLuint vao, con
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	if (texturePath) {
-		this->texture = new Texture(texturePath);
-		this->texture->bind(0);
-		glUniform1i(glGetUniformLocation(this->programId, "myTextureSampler"), 0);
-	}
-
 	glBindVertexArray(0);
 }
 
@@ -55,6 +48,5 @@ void ThreeDimensionalObject::draw()
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	
-
 	glBindVertexArray(0);
 }

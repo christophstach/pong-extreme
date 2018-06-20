@@ -2,11 +2,9 @@
 #include "RightBar.h"
 
 
-RightBar::RightBar(GLuint programId, GLuint vao, ObjectLoader* objectLoader)
+RightBar::RightBar(ObjectLoader* objectLoader, GLuint vao)
 {
-	this->programId = programId;
-	this->vao = vao;
-	this->object = new ThreeDimensionalObject(this->programId, this->vao, "./resources/objects/cube.obj", NULL, objectLoader);
+	this->object = new ThreeDimensionalObject(objectLoader, vao, "./resources/objects/cube.obj");
 }
 
 glm::mat4 RightBar::transform(glm::mat4 model)

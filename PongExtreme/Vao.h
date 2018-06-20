@@ -4,7 +4,7 @@ enum Vao
 	LeftBarObject,
 	RightBarObject,
 	BallObject,
-	LampObject,
+	FloorObject,
 	ArenaObject,
 	NumberVaos
 };

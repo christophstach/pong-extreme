@@ -53,7 +53,7 @@ void Game::init()
 	}
 
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
-	this->programId = this->shaderLoader->load("./resources/shaders/StandardShading.vertexshader", "./resources/shaders/StandardShading.fragmentshader");
+	this->shaderId = this->shaderLoader->load("./resources/shaders/StandardShading.vertexshader", "./resources/shaders/StandardShading.fragmentshader");
 
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
 	//glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -82,18 +82,28 @@ void Game::init()
 	glDepthFunc(GL_LESS);
 
 	glGenVertexArrays(NumberVaos, this->vaos);
+	glUseProgram(this->shaderId);
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(glGetUniformLocation(this->shaderId, "myTextureSampler"), 0);
+
+
 }
 
 void Game::runMainLoop()
 {
+	this->taos[Tao::BallTexture] = this->textureLoader->loadStb("./resources/textures/ball.png", GL_REPEAT);
+	this->taos[Tao::WoodTexture] = this->textureLoader->loadStb("./resources/textures/wood.jpeg");
+	this->taos[Tao::ArenaTexture] = this->textureLoader->loadStb("./resources/textures/arena.bmp");
+	this->taos[Tao::BlackTexture] = this->textureLoader->loadStb("./resources/textures/black.png");
+	this->taos[Tao::RedTexture] = this->textureLoader->loadStb("./resources/textures/red.png");
+	this->taos[Tao::BlueTexture] = this->textureLoader->loadStb("./resources/textures/blue.png");
 
-	Ball* ball = new Ball(this->programId, this->vaos[Vao::BallObject], this->objectLoader);
-	Arena* arena = new Arena(this->programId, this->vaos[Vao::ArenaObject], this->objectLoader);
-	LeftBar* leftBar = new LeftBar(this->programId, this->vaos[Vao::LeftBarObject], this->objectLoader);
-	RightBar* rightBar = new RightBar(this->programId, this->vaos[Vao::RightBarObject], this->objectLoader);
-	
 
-	
+	Floor* floor = new Floor(this->objectLoader, this->vaos[Vao::FloorObject]);
+	Ball* ball = new Ball(this->objectLoader, this->vaos[Vao::BallObject]);
+	Arena* arena = new Arena(this->objectLoader, this->vaos[Vao::ArenaObject]);
+	LeftBar* leftBar = new LeftBar(this->objectLoader, this->vaos[Vao::LeftBarObject]);
+	RightBar* rightBar = new RightBar(this->objectLoader, this->vaos[Vao::RightBarObject]);
 
 	do {
 		this->preMainLoop();
@@ -101,12 +111,11 @@ void Game::runMainLoop()
 		leftBar->setPosition(leftBarPosition);
 		rightBar->setPosition(rightBarPosition);
 
-		
-		this->handleDraw(leftBar);
-		this->handleDraw(rightBar);
-		this->handleDraw(arena);
-		this->handleDraw(ball);
-
+		this->handleDraw(floor, this->taos[Tao::ArenaTexture]);
+		this->handleDraw(leftBar, this->taos[Tao::BlueTexture]);
+		this->handleDraw(rightBar, this->taos[Tao::RedTexture]);
+		this->handleDraw(arena, this->taos[Tao::WoodTexture]);
+		this->handleDraw(ball, this->taos[Tao::BallTexture]);
 		// ###################################################
 		this->postMainLoop();
 	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
@@ -115,8 +124,6 @@ void Game::runMainLoop()
 void Game::preMainLoop()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(this->programId);
-	glLoadIdentity();
 
 	this->generateMvp();
 	this->handleKeys();
@@ -130,17 +137,18 @@ void Game::postMainLoop()
 
 void Game::sendMvp() {
 	this->mvp = this->projection * this->view * this->model;
-	glm::vec3 lightPosition = glm::vec3(25.0, 15.0, 0.0);
+	glm::vec3 lightPosition = glm::vec3(10.0, 20.0, 0.0);
 
-	glUniformMatrix4fv(glGetUniformLocation(this->programId, "MVP"), 1, GL_FALSE, &this->mvp[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(this->programId, "M"), 1, GL_FALSE, &this->model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(this->programId, "V"), 1, GL_FALSE, &this->view[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(this->programId, "P"), 1, GL_FALSE, &this->projection[0][0]);
-	glUniform3f(glGetUniformLocation(this->programId, "LightPosition_worldspace"), lightPosition.x, lightPosition.y, lightPosition.z);
+	glUniformMatrix4fv(glGetUniformLocation(this->shaderId, "MVP"), 1, GL_FALSE, &this->mvp[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(this->shaderId, "M"), 1, GL_FALSE, &this->model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(this->shaderId, "V"), 1, GL_FALSE, &this->view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(this->shaderId, "P"), 1, GL_FALSE, &this->projection[0][0]);
+	glUniform3f(glGetUniformLocation(this->shaderId, "LightPosition_worldspace"), lightPosition.x, lightPosition.y, lightPosition.z);
 }
 
-void Game::handleDraw(ThreeDimensional* threeDimensional)
+void Game::handleDraw(ThreeDimensional* threeDimensional, GLuint texture)
 {
+	glBindTexture(GL_TEXTURE_2D, texture);
 	this->model = threeDimensional->transform(this->model);
 	this->sendMvp();
 	this->model = glm::mat4(1.0f);

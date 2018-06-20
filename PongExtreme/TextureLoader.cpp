@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TextureLoader.h"
+#include "lib/stb/stb_image.h"
 
 
 #define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
@@ -9,32 +10,33 @@
 TextureLoader::TextureLoader()
 {
 
-
 }
 
-GLuint TextureLoader::loadStb(const char * imagePath)
+GLuint TextureLoader::loadStb(const char * imagePath, int mode)
 {
 	unsigned int texture = 0;
-	
-	/*glGenTextures(1, &texture);
+	int width, height, nrChannels;
+	unsigned char* localBuffer;
+
+	stbi_set_flip_vertically_on_load(1);
+	localBuffer = stbi_load(imagePath, &width, &height, &nrChannels, 0);
+
+	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// load and generate the texture
-	int width, height, nrChannels;
-	unsigned char *data = stbi_load(imagePath, &width, &height, &nrChannels, 0);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, mode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, mode);
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, localBuffer);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	if (localBuffer) {
+		stbi_image_free(localBuffer);
 	}
-	else {
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-	*/
+
 
 	return texture;
 }
