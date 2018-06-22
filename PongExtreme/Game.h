@@ -38,7 +38,7 @@ private:
 
 	void generateMvp();
 	void sendMvp();
-	void handleDraw(ThreeDimensional* threeDimensional, GLuint texture);
+	void handleDraw(GameObject* gameObject, GLuint texture);
 
 	void preMainLoop();
 	void postMainLoop();

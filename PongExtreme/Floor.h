@@ -1,5 +1,5 @@
 #pragma once
-class Floor : public ThreeDimensional
+class Floor : public GameObject
 {
 private:
 	ThreeDimensionalObject * object;

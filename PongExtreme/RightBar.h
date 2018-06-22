@@ -1,5 +1,5 @@
 #pragma once
-class RightBar: public ThreeDimensional
+class RightBar: public GameObject
 {
 private:
 	ThreeDimensionalObject* object;

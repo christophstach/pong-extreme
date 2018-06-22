@@ -9,6 +9,7 @@ Arena::Arena(ObjectLoader* objectLoader, GLuint vao)
 
 glm::mat4 Arena::transform(glm::mat4 model)
 {
+	//model = glm::scale(model, glm::vec3(glm::vec3(1.0, 1.0, 1.0)));
 	model = glm::scale(model, glm::vec3(glm::vec3(5.85, 15.0, 5.85)));
 	return model;
 }

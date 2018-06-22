@@ -1,5 +1,5 @@
 #pragma once
-class Arena : public ThreeDimensional
+class Arena : public GameObject
 {
 private:
 	ThreeDimensionalObject* object;

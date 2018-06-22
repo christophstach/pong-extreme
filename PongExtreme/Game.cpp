@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Game.h"
 
-float fieldOfView = 60.0f;
+float fieldOfView = 60.0;
 float leftBarPosition = 0;
 float rightBarPosition = 0;
 
@@ -100,10 +100,16 @@ void Game::runMainLoop()
 
 
 	Floor* floor = new Floor(this->objectLoader, this->vaos[Vao::FloorObject]);
-	Ball* ball = new Ball(this->objectLoader, this->vaos[Vao::BallObject]);
 	Arena* arena = new Arena(this->objectLoader, this->vaos[Vao::ArenaObject]);
 	LeftBar* leftBar = new LeftBar(this->objectLoader, this->vaos[Vao::LeftBarObject]);
 	RightBar* rightBar = new RightBar(this->objectLoader, this->vaos[Vao::RightBarObject]);
+	Ball* ball = new Ball(this->objectLoader, this->vaos[Vao::BallObject]);
+
+	ball
+		->setLeftBar(leftBar)
+		->setRightBar(rightBar);
+
+
 
 	do {
 		this->preMainLoop();
@@ -115,6 +121,8 @@ void Game::runMainLoop()
 		this->handleDraw(leftBar, this->taos[Tao::BlueTexture]);
 		this->handleDraw(rightBar, this->taos[Tao::RedTexture]);
 		this->handleDraw(arena, this->taos[Tao::WoodTexture]);
+
+
 		this->handleDraw(ball, this->taos[Tao::BallTexture]);
 		// ###################################################
 		this->postMainLoop();
@@ -146,16 +154,18 @@ void Game::sendMvp() {
 	glUniform3f(glGetUniformLocation(this->shaderId, "LightPosition_worldspace"), lightPosition.x, lightPosition.y, lightPosition.z);
 }
 
-void Game::handleDraw(ThreeDimensional* threeDimensional, GLuint texture)
+void Game::handleDraw(GameObject* gameObject, GLuint texture)
 {
 	glBindTexture(GL_TEXTURE_2D, texture);
-	this->model = threeDimensional->transform(this->model);
+	this->model = gameObject->transform(this->model);
 	this->sendMvp();
 	this->model = glm::mat4(1.0f);
-	threeDimensional->draw();
+	gameObject->draw();
 }
 
 void Game::generateMvp() {
+	const float cameraHeight = 25;
+
 	this->projection = glm::perspective(
 		glm::radians(fieldOfView),
 		(float)this->resolutionWidth / (float)this->resolutionHeight,
@@ -164,7 +174,7 @@ void Game::generateMvp() {
 	);
 
 	this->view = glm::lookAt(
-		glm::vec3(25, 25, 0),
+		glm::vec3(25, cameraHeight, 0),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	);
