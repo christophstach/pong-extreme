@@ -85,30 +85,37 @@ void Game::init()
 	glUseProgram(this->shaderId);
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(glGetUniformLocation(this->shaderId, "myTextureSampler"), 0);
-
-
 }
 
 void Game::runMainLoop()
 {
 	this->taos[Tao::BallTexture] = this->textureLoader->loadStb("./resources/textures/ball.png", GL_REPEAT);
-	this->taos[Tao::WoodTexture] = this->textureLoader->loadStb("./resources/textures/wood.jpeg");
-	this->taos[Tao::ArenaTexture] = this->textureLoader->loadStb("./resources/textures/arena.bmp");
-	this->taos[Tao::BlackTexture] = this->textureLoader->loadStb("./resources/textures/black.png");
-	this->taos[Tao::RedTexture] = this->textureLoader->loadStb("./resources/textures/red.png");
-	this->taos[Tao::BlueTexture] = this->textureLoader->loadStb("./resources/textures/blue.png");
+	this->taos[Tao::FlatBlueGreyTexture] = this->textureLoader->loadStb("./resources/textures/flat/blue-grey.png");
+	this->taos[Tao::FlatFlirtatiousTexture] = this->textureLoader->loadStb("./resources/textures/flat/flirtatious.png");
+	this->taos[Tao::FlatFusionRedTexture] = this->textureLoader->loadStb("./resources/textures/flat/fusion-red.png");
+	this->taos[Tao::FlatHighBlueTexture] = this->textureLoader->loadStb("./resources/textures/flat/high-blue.png");
+	this->taos[Tao::FlatMaximumBlueGreenTexture] = this->textureLoader->loadStb("./resources/textures/flat/maximum-blue-green.png");
+	this->taos[Tao::FlatOrangeHibiscusTexture] = this->textureLoader->loadStb("./resources/textures/flat/orange-hibiscus.png");
+	this->taos[Tao::FlatReptileGreenTexture] = this->textureLoader->loadStb("./resources/textures/flat/reptile-green.png");
 
 
 	Floor* floor = new Floor(this->objectLoader, this->vaos[Vao::FloorObject]);
-	Arena* arena = new Arena(this->objectLoader, this->vaos[Vao::ArenaObject]);
 	LeftBar* leftBar = new LeftBar(this->objectLoader, this->vaos[Vao::LeftBarObject]);
 	RightBar* rightBar = new RightBar(this->objectLoader, this->vaos[Vao::RightBarObject]);
 	Ball* ball = new Ball(this->objectLoader, this->vaos[Vao::BallObject]);
 
+	ArenaBoundaryTop* arenaBoundaryTop = new ArenaBoundaryTop(this->objectLoader, this->vaos[Vao::ArenaBoundaryTopObject]);
+	ArenaBoundaryRight* arenaBoundaryRight = new ArenaBoundaryRight(this->objectLoader, this->vaos[Vao::ArenaBoundaryRightObject]);
+	ArenaBoundaryBottom* arenaBoundaryBottom = new ArenaBoundaryBottom(this->objectLoader, this->vaos[Vao::ArenaBoundaryBottomObject]);
+	ArenaBoundaryLeft* arenaBoundaryLeft = new ArenaBoundaryLeft(this->objectLoader, this->vaos[Vao::ArenaBoundaryLeftObject]);
+
 	ball
+		->setArenaBoundaryTop(arenaBoundaryTop)
+		->setArenaBoundaryRight(arenaBoundaryRight)
+		->setArenaBoundaryBottom(arenaBoundaryBottom)
+		->setArenaBoundaryLeft(arenaBoundaryLeft)
 		->setLeftBar(leftBar)
 		->setRightBar(rightBar);
-
 
 
 	do {
@@ -117,11 +124,15 @@ void Game::runMainLoop()
 		leftBar->setPosition(leftBarPosition);
 		rightBar->setPosition(rightBarPosition);
 
-		this->handleDraw(floor, this->taos[Tao::ArenaTexture]);
-		this->handleDraw(leftBar, this->taos[Tao::BlueTexture]);
-		this->handleDraw(rightBar, this->taos[Tao::RedTexture]);
-		this->handleDraw(arena, this->taos[Tao::WoodTexture]);
+		this->handleDraw(floor, this->taos[Tao::FlatBlueGreyTexture]);
 
+		this->handleDraw(arenaBoundaryTop, this->taos[Tao::FlatFlirtatiousTexture]);
+		this->handleDraw(arenaBoundaryRight, this->taos[Tao::FlatFlirtatiousTexture]);
+		this->handleDraw(arenaBoundaryBottom, this->taos[Tao::FlatFlirtatiousTexture]);
+		this->handleDraw(arenaBoundaryLeft, this->taos[Tao::FlatFlirtatiousTexture]);
+
+		this->handleDraw(leftBar, this->taos[Tao::FlatFusionRedTexture]);
+		this->handleDraw(rightBar, this->taos[Tao::FlatHighBlueTexture]);
 
 		this->handleDraw(ball, this->taos[Tao::BallTexture]);
 		// ###################################################

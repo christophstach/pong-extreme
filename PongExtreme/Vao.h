@@ -5,6 +5,9 @@ enum Vao
 	RightBarObject,
 	BallObject,
 	FloorObject,
-	ArenaObject,
+	ArenaBoundaryTopObject,
+	ArenaBoundaryRightObject,
+	ArenaBoundaryBottomObject,
+	ArenaBoundaryLeftObject,
 	NumberVaos
 };

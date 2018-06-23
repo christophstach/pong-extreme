@@ -2,7 +2,6 @@
 class LeftBar: public GameObject
 {
 private: 
-	ThreeDimensionalObject* object;
 	float position = 0;
 public:
 	LeftBar(ObjectLoader* objectLoader, GLuint vao);

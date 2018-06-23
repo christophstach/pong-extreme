@@ -1,11 +1,15 @@
 #pragma once
 enum Tao
 {
-	WoodTexture,
 	BallTexture,
-	ArenaTexture,
-	BlackTexture,
-	BlueTexture,
-	RedTexture,
+	// Flat colors: https://flatuicolors.com/palette/de
+	FlatBlueGreyTexture,
+	FlatFlirtatiousTexture,
+	FlatFusionRedTexture,
+	FlatHighBlueTexture,
+	FlatMaximumBlueGreenTexture,
+	FlatOrangeHibiscusTexture,
+	FlatReptileGreenTexture,
+	//
 	NumberTaos
 };

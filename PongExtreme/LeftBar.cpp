@@ -9,12 +9,13 @@ LeftBar::LeftBar(ObjectLoader* objectLoader, GLuint vao)
 
 glm::mat4 LeftBar::transform(glm::mat4 model) 
 {
-	glm::mat4 translate = glm::translate(glm::mat4(1.0), glm::vec3(this->position, 0.0f, 16.0f));
-	glm::mat4 scale = glm::scale(glm::mat4(1.0), glm::vec3(4.0f, 0.8f, 0.2f));
-	
-	this->boundingBox->min = this->object->boundingBox->min * scale + glm::vec4(this->position, 0.0f, 16.0f, 0.0);
-	this->boundingBox->max = this->object->boundingBox->max * scale + glm::vec4(this->position, 0.0f, 16.0f, 0.0);
+	glm::vec3 translateValue = glm::vec3(this->position, 0.0f, 16.0f);
+	glm::vec3 scaleValue = glm::vec3(4.0f, 0.8f, 0.2f);
 
+	glm::mat4 translate = glm::translate(glm::mat4(1.0), translateValue);
+	glm::mat4 scale = glm::scale(glm::mat4(1.0), scaleValue);
+	
+	this->transformBoundingBox(translateValue, scaleValue);
 	return model * translate * scale;
 }
 
