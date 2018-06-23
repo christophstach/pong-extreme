@@ -6,7 +6,7 @@ Ball::Ball(ObjectLoader* objectLoader, GLuint vao)
 	this->speed = 0.01;
 	//							y    z    x
 	this->position = glm::vec3(0.0, 0.0, 0.0);
-	this->direction = glm::vec3(this->speed, 0.0, this->speed);
+	this->direction = glm::vec3(this->speed * 0, 0.0, this->speed);
 	this->object = new ThreeDimensionalObject(objectLoader, vao, "./resources/objects/ball.obj");
 }
 
@@ -87,12 +87,24 @@ Ball * Ball::setArenaBoundaryLeft(ArenaBoundaryLeft* arenaBoundaryLeft)
 
 bool Ball::hasCollisionWithLeftBar()
 {
-	return this->leftBar->getBoundingBox()->min.z - this->getBoundingBox()->max.z <= 0;
+	if (this->leftBar->getBoundingBox()->min.z - this->getBoundingBox()->max.z <= 0) {
+		if ((this->getBoundingBox()->min.x >= this->leftBar->getBoundingBox()->min.x && this->getBoundingBox()->min.x <= this->leftBar->getBoundingBox()->max.x) || (this->getBoundingBox()->max.x >= this->leftBar->getBoundingBox()->min.x && this->getBoundingBox()->max.x <= this->leftBar->getBoundingBox()->max.x)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool Ball::hasCollisionWithRightBar()
 {
-	return this->rightBar->getBoundingBox()->max.z - this->getBoundingBox()->min.z >= 0;
+	if (this->rightBar->getBoundingBox()->max.z - this->getBoundingBox()->min.z >= 0) {
+		if ((this->getBoundingBox()->min.x >= this->rightBar->getBoundingBox()->min.x && this->getBoundingBox()->min.x <= this->rightBar->getBoundingBox()->max.x) || (this->getBoundingBox()->max.x >= this->rightBar->getBoundingBox()->min.x && this->getBoundingBox()->max.x <= this->rightBar->getBoundingBox()->max.x)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool Ball::hasCollisionWithArenaBoundaryTop()
