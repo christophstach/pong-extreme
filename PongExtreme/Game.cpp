@@ -51,7 +51,7 @@ void Game::init()
 	}
 
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
-	this->shaderId = this->shaderLoader->load("./resources/shaders/StandardShading.vertexshader", "./resources/shaders/StandardShading.fragmentshader");
+	this->shaderId = this->shaderLoader->load("./resources/shaders/StandardShader.vs", "./resources/shaders/StandardShader.fs");
 
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
 	//glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
