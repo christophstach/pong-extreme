@@ -2,8 +2,8 @@
 class Ball : public GameObject
 {
 private:
-	float rotation = 0;
-	float speed = 12.0;
+	float rotation = 0.0;
+	float speed = 0.0;
 	glm::vec3 position;
 	glm::vec3 direction;
 	GLdouble timeDelta = 0;
@@ -29,6 +29,10 @@ public:
 	Ball* setArenaBoundaryBottom(ArenaBoundaryBottom* arenaBoundaryBottom);
 	Ball* setArenaBoundaryLeft(ArenaBoundaryLeft* arenaBoundaryLeft);
 	Ball* setTimeDelta(GLdouble timeDelta);
+	Ball* startRolling(float speed = 12.0);
+	Ball* stopRolling();
+
+	bool isRolling();
 
 	bool hasCollisionWithLeftBar();
 	bool hasCollisionWithRightBar();

@@ -34,7 +34,9 @@ void Ball::checkCollisions()
 
 glm::mat4 Ball::transform(glm::mat4 model)
 {
-	this->rotation += 0.01;
+	if (this->speed != 0.0) {
+		this->rotation += 5.0 * this->timeDelta;
+	}
 
 	glm::vec3 translateValue = this->position;
 	glm::vec3 rotateValue = glm::vec3(1.0, 1.0, 1.0);
@@ -95,6 +97,23 @@ Ball * Ball::setTimeDelta(GLdouble timeDelta)
 {
 	this->timeDelta = timeDelta;
 	return this;
+}
+
+Ball * Ball::startRolling(float speed)
+{
+	this->speed = speed;
+	return this;
+}
+
+Ball * Ball::stopRolling()
+{
+	this->speed = 0.0;
+	return this;
+}
+
+bool Ball::isRolling()
+{
+	return this->speed != 0.0;
 }
 
 bool Ball::hasCollisionWithLeftBar()
