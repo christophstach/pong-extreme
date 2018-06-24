@@ -18,7 +18,8 @@ glm::mat4 ArenaBoundaryRight::transform(glm::mat4 model)
 	return model * translate * scale;
 }
 
-void ArenaBoundaryRight::draw()
+GameObject* ArenaBoundaryRight::draw()
 {
 	this->object->draw();
+	return this;
 }

@@ -18,7 +18,8 @@ glm::mat4 ArenaBoundaryBottom::transform(glm::mat4 model)
 	return model * translate * scale;
 }
 
-void ArenaBoundaryBottom::draw()
+GameObject* ArenaBoundaryBottom::draw()
 {
 	this->object->draw();
+	return this;
 }

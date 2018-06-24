@@ -170,6 +170,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="ThreeDimensionalObject.h" />
     <ClInclude Include="Vao.h" />
+    <ClInclude Include="WaveSound.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArenaBoundaryBottom.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ThreeDimensionalObject.cpp" />
+    <ClCompile Include="WaveSound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

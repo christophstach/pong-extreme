@@ -3,10 +3,10 @@ class Ball : public GameObject
 {
 private:
 	float rotation = 0;
+	float speed = 12.0;
 	glm::vec3 position;
 	glm::vec3 direction;
-
-	float speed;
+	GLdouble timeDelta = 0;
 
 	LeftBar* leftBar;
 	RightBar* rightBar;
@@ -14,11 +14,13 @@ private:
 	ArenaBoundaryRight* arenaBoundaryRight;
 	ArenaBoundaryBottom* arenaBoundaryBottom;
 	ArenaBoundaryLeft* arenaBoundaryLeft;
+
+	WaveSound* ballCollisionSound;
 public:
 	Ball(ObjectLoader* objectLoader, GLuint vao);
 	void checkCollisions();
 	glm::mat4 transform(glm::mat4 model);
-	void draw();
+	GameObject* draw();
 
 	Ball* setLeftBar(LeftBar* leftBar);
 	Ball* setRightBar(RightBar* rightBar);
@@ -26,6 +28,7 @@ public:
 	Ball* setArenaBoundaryRight(ArenaBoundaryRight* arenaBoundaryRight);
 	Ball* setArenaBoundaryBottom(ArenaBoundaryBottom* arenaBoundaryBottom);
 	Ball* setArenaBoundaryLeft(ArenaBoundaryLeft* arenaBoundaryLeft);
+	Ball* setTimeDelta(GLdouble timeDelta);
 
 	bool hasCollisionWithLeftBar();
 	bool hasCollisionWithRightBar();

@@ -19,12 +19,50 @@ glm::mat4 RightBar::transform(glm::mat4 model)
 	return model * translate * scale;
 }
 
-void RightBar::setPosition(float position)
+RightBar* RightBar::setPosition(float position)
 {
 	this->position = position;
+	return this;
 }
 
-void RightBar::draw()
+GameObject* RightBar::draw()
 {
 	this->object->draw();
+	return this;
+}
+
+RightBar* RightBar::moveUp()
+{
+	if (this->getBoundingBox()->min.x >= this->arenaBoundaryTop->getBoundingBox()->max.x) {
+		this->position -= this->speed * this->timeDelta;
+	}
+
+	return this;
+}
+
+RightBar* RightBar::moveDown()
+{
+	if (this->getBoundingBox()->max.x <= this->arenaBoundaryBottom->getBoundingBox()->min.x) {
+		this->position += this->speed * this->timeDelta;
+	}
+
+	return this;
+}
+
+RightBar * RightBar::setArenaBoundaryTop(ArenaBoundaryTop * arenaBoundaryTop)
+{
+	this->arenaBoundaryTop = arenaBoundaryTop;
+	return this;
+}
+
+RightBar * RightBar::setArenaBoundaryBottom(ArenaBoundaryBottom * arenaBoundaryBottom)
+{
+	this->arenaBoundaryBottom = arenaBoundaryBottom;
+	return this;
+}
+
+RightBar* RightBar::setTimeDelta(GLdouble timeDelta)
+{
+	this->timeDelta = timeDelta;
+	return this;
 }

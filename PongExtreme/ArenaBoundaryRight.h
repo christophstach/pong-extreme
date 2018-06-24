@@ -4,6 +4,6 @@ class ArenaBoundaryRight : public GameObject
 public:
 	ArenaBoundaryRight(ObjectLoader* objectLoader, GLuint vao);
 	glm::mat4 transform(glm::mat4 model);
-	void draw();
+	GameObject* draw();
 };
 

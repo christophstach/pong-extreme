@@ -19,7 +19,8 @@ glm::mat4 Floor::transform(glm::mat4 model)
 	return model * translate * scale;
 }
 
-void Floor::draw()
+GameObject* Floor::draw()
 {
 	this->object->draw();
+	return this;
 }

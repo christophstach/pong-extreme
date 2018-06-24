@@ -2,8 +2,6 @@
 #include "Game.h"
 
 float fieldOfView = 60.0;
-float leftBarPosition = 0;
-float rightBarPosition = 0;
 
 bool upPressed = false;
 bool downPressed = false;
@@ -87,6 +85,18 @@ void Game::init()
 	glUniform1i(glGetUniformLocation(this->shaderId, "myTextureSampler"), 0);
 }
 
+GLdouble Game::getTimeDelta()
+{
+	std::chrono::high_resolution_clock::time_point timeCurrent = std::chrono::high_resolution_clock::now();
+	std::chrono::nanoseconds timeDifference = timeCurrent - timePrevious;
+
+	GLdouble delta = timeDifference.count();
+	delta /= 1000000000;
+	timePrevious = timeCurrent;
+
+	return delta;
+}
+
 void Game::runMainLoop()
 {
 	this->taos[Tao::BallTexture] = this->textureLoader->loadStb("./resources/textures/ball.png", GL_REPEAT);
@@ -99,42 +109,51 @@ void Game::runMainLoop()
 	this->taos[Tao::FlatReptileGreenTexture] = this->textureLoader->loadStb("./resources/textures/flat/reptile-green.png");
 
 
-	Floor* floor = new Floor(this->objectLoader, this->vaos[Vao::FloorObject]);
-	LeftBar* leftBar = new LeftBar(this->objectLoader, this->vaos[Vao::LeftBarObject]);
-	RightBar* rightBar = new RightBar(this->objectLoader, this->vaos[Vao::RightBarObject]);
-	Ball* ball = new Ball(this->objectLoader, this->vaos[Vao::BallObject]);
+	this->floor = new Floor(this->objectLoader, this->vaos[Vao::FloorObject]);
+	this->leftBar = new LeftBar(this->objectLoader, this->vaos[Vao::LeftBarObject]);
+	this->rightBar = new RightBar(this->objectLoader, this->vaos[Vao::RightBarObject]);
+	this->ball = new Ball(this->objectLoader, this->vaos[Vao::BallObject]);
 
-	ArenaBoundaryTop* arenaBoundaryTop = new ArenaBoundaryTop(this->objectLoader, this->vaos[Vao::ArenaBoundaryTopObject]);
-	ArenaBoundaryRight* arenaBoundaryRight = new ArenaBoundaryRight(this->objectLoader, this->vaos[Vao::ArenaBoundaryRightObject]);
-	ArenaBoundaryBottom* arenaBoundaryBottom = new ArenaBoundaryBottom(this->objectLoader, this->vaos[Vao::ArenaBoundaryBottomObject]);
-	ArenaBoundaryLeft* arenaBoundaryLeft = new ArenaBoundaryLeft(this->objectLoader, this->vaos[Vao::ArenaBoundaryLeftObject]);
+	this->arenaBoundaryTop = new ArenaBoundaryTop(this->objectLoader, this->vaos[Vao::ArenaBoundaryTopObject]);
+	this->arenaBoundaryRight = new ArenaBoundaryRight(this->objectLoader, this->vaos[Vao::ArenaBoundaryRightObject]);
+	this->arenaBoundaryBottom = new ArenaBoundaryBottom(this->objectLoader, this->vaos[Vao::ArenaBoundaryBottomObject]);
+	this->arenaBoundaryLeft = new ArenaBoundaryLeft(this->objectLoader, this->vaos[Vao::ArenaBoundaryLeftObject]);
 
-	ball
-		->setArenaBoundaryTop(arenaBoundaryTop)
-		->setArenaBoundaryRight(arenaBoundaryRight)
-		->setArenaBoundaryBottom(arenaBoundaryBottom)
-		->setArenaBoundaryLeft(arenaBoundaryLeft)
-		->setLeftBar(leftBar)
-		->setRightBar(rightBar);
+	this->leftBar
+		->setArenaBoundaryTop(this->arenaBoundaryTop)
+		->setArenaBoundaryBottom(this->arenaBoundaryBottom);
 
+	this->rightBar
+		->setArenaBoundaryTop(this->arenaBoundaryTop)
+		->setArenaBoundaryBottom(this->arenaBoundaryBottom);
+
+	this->ball
+		->setArenaBoundaryTop(this->arenaBoundaryTop)
+		->setArenaBoundaryRight(this->arenaBoundaryRight)
+		->setArenaBoundaryBottom(this->arenaBoundaryBottom)
+		->setArenaBoundaryLeft(this->arenaBoundaryLeft)
+		->setLeftBar(this->leftBar)
+		->setRightBar(this->rightBar);
+
+	this->timeDelta = this->getTimeDelta();
 
 	do {
 		this->preMainLoop();
 		// ###################################################
-		leftBar->setPosition(leftBarPosition);
-		rightBar->setPosition(rightBarPosition);
+		this->ball->setTimeDelta(this->timeDelta);
+		this->leftBar->setTimeDelta(this->timeDelta);
+		this->rightBar->setTimeDelta(this->timeDelta);
 
 		this->handleDraw(floor, this->taos[Tao::FlatBlueGreyTexture]);
+		this->handleDraw(this->arenaBoundaryTop, this->taos[Tao::FlatFlirtatiousTexture]);
+		this->handleDraw(this->arenaBoundaryRight, this->taos[Tao::FlatFlirtatiousTexture]);
+		this->handleDraw(this->arenaBoundaryBottom, this->taos[Tao::FlatFlirtatiousTexture]);
+		this->handleDraw(this->arenaBoundaryLeft, this->taos[Tao::FlatFlirtatiousTexture]);
 
-		this->handleDraw(arenaBoundaryTop, this->taos[Tao::FlatFlirtatiousTexture]);
-		this->handleDraw(arenaBoundaryRight, this->taos[Tao::FlatFlirtatiousTexture]);
-		this->handleDraw(arenaBoundaryBottom, this->taos[Tao::FlatFlirtatiousTexture]);
-		this->handleDraw(arenaBoundaryLeft, this->taos[Tao::FlatFlirtatiousTexture]);
+		this->handleDraw(this->leftBar, this->taos[Tao::FlatFusionRedTexture]);
+		this->handleDraw(this->rightBar, this->taos[Tao::FlatHighBlueTexture]);
 
-		this->handleDraw(leftBar, this->taos[Tao::FlatFusionRedTexture]);
-		this->handleDraw(rightBar, this->taos[Tao::FlatHighBlueTexture]);
-
-		this->handleDraw(ball, this->taos[Tao::BallTexture]);
+		this->handleDraw(this->ball, this->taos[Tao::BallTexture]);
 		// ###################################################
 		this->postMainLoop();
 	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
@@ -143,6 +162,7 @@ void Game::runMainLoop()
 void Game::preMainLoop()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	this->timeDelta = this->getTimeDelta();
 
 	this->generateMvp();
 	this->handleKeys();
@@ -232,10 +252,8 @@ void Game::logError(int error, const char * description)
 
 void Game::handleKeys()
 {
-	const float modifier = 0.1f;
-
-	wPressed && (leftBarPosition -= modifier);
-	sPressed && (leftBarPosition += modifier);
-	upPressed && (rightBarPosition -= modifier);
-	downPressed && (rightBarPosition += modifier);
+	if (wPressed) this->leftBar->moveUp();
+	if (sPressed) this->leftBar->moveDown();
+	if (upPressed) this->rightBar->moveUp();
+	if (downPressed) this->rightBar->moveDown();
 }
