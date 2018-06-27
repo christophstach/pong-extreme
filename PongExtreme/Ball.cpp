@@ -34,12 +34,13 @@ void Ball::checkCollisions()
 glm::mat4 Ball::transform(glm::mat4 model)
 {
 	if (this->speed != 0.0) {
-		this->rotation += 5.0 * this->timeDelta;
+		this->rotation += this->speed * this->timeDelta;
+		this->speed += 0.001;
 	}
 
 	glm::vec3 translateValue = this->position;
 	//							y    z    x
-	glm::vec3 rotateValue = glm::vec3(-this->direction.y, -this->direction.z, -this->direction.x);
+	glm::vec3 rotateValue = glm::vec3(this->direction.z, -this->direction.y, -this->direction.x);
 	glm::vec3 scaleValue = glm::vec3(0.75, 0.75, 0.75);
 
 	glm::mat4 translate = glm::translate(glm::mat4(1.0), translateValue);

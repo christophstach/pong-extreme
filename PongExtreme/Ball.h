@@ -31,7 +31,7 @@ public:
 	Ball* setArenaBoundaryBottom(ArenaBoundaryBottom* arenaBoundaryBottom);
 	Ball* setArenaBoundaryLeft(ArenaBoundaryLeft* arenaBoundaryLeft);
 	Ball* setTimeDelta(GLdouble timeDelta);
-	Ball* startRolling(float speed = 15.0);
+	Ball* startRolling(float speed = 12.0);
 	Ball* stopRolling();
 
 	bool isRolling();
