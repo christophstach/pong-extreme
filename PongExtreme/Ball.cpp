@@ -3,7 +3,6 @@
 
 Ball::Ball(ObjectLoader* objectLoader, GLuint vao)
 {
-	//							y    z    x
 	this->position = glm::vec3(0.0, 0.0, 0.0);
 	this->direction = glm::vec3(1.0, 0.0, 1.0);
 	this->object = new ThreeDimensionalObject(objectLoader, vao, "./resources/objects/ball.obj");
@@ -15,7 +14,7 @@ void Ball::checkCollisions()
 	const int x = 2;
 	const int y = 0;
 	const int z = 1;
-	double random = ((double)rand() / (RAND_MAX));
+	double random = (double)(rand() % 75 + 25) / 100.0;
 
 	if (this->hasCollisionWithLeftBar()) this->direction[x] = -random;
 	if (this->hasCollisionWithRightBar()) this->direction[x] = random;
@@ -39,7 +38,8 @@ glm::mat4 Ball::transform(glm::mat4 model)
 	}
 
 	glm::vec3 translateValue = this->position;
-	glm::vec3 rotateValue = glm::vec3(1.0, 1.0, 1.0);
+	//							y    z    x
+	glm::vec3 rotateValue = glm::vec3(-this->direction.y, -this->direction.z, -this->direction.x);
 	glm::vec3 scaleValue = glm::vec3(0.75, 0.75, 0.75);
 
 	glm::mat4 translate = glm::translate(glm::mat4(1.0), translateValue);
@@ -120,7 +120,12 @@ bool Ball::hasCollisionWithLeftBar()
 {
 	if (this->leftBar->getBoundingBox()->min.z - this->getBoundingBox()->max.z <= 0) {
 		if ((this->getBoundingBox()->min.x >= this->leftBar->getBoundingBox()->min.x && this->getBoundingBox()->min.x <= this->leftBar->getBoundingBox()->max.x) || (this->getBoundingBox()->max.x >= this->leftBar->getBoundingBox()->min.x && this->getBoundingBox()->max.x <= this->leftBar->getBoundingBox()->max.x)) {
-			this->ballCollisionSound->play();
+			if (!this->yetCollidedLeft) {
+				this->yetCollidedLeft = true;
+				this->yetCollidedRight = false;
+				this->ballCollisionSound->play();
+			}
+
 			return true;
 		}
 	}
@@ -132,7 +137,12 @@ bool Ball::hasCollisionWithRightBar()
 {
 	if (this->rightBar->getBoundingBox()->max.z - this->getBoundingBox()->min.z >= 0) {
 		if ((this->getBoundingBox()->min.x >= this->rightBar->getBoundingBox()->min.x && this->getBoundingBox()->min.x <= this->rightBar->getBoundingBox()->max.x) || (this->getBoundingBox()->max.x >= this->rightBar->getBoundingBox()->min.x && this->getBoundingBox()->max.x <= this->rightBar->getBoundingBox()->max.x)) {
-			this->ballCollisionSound->play();
+			if (!this->yetCollidedRight) {
+				this->yetCollidedRight = true;
+				this->yetCollidedLeft = false;
+				this->ballCollisionSound->play();
+			}
+			
 			return true;
 		}
 	}
@@ -151,6 +161,8 @@ bool Ball::hasCollisionWithArenaBoundaryRight()
 		this->speed = 0.0;
 		this->position.x = 0.0;
 		this->position.z = 0.0;
+		this->yetCollidedLeft = false;
+		this->yetCollidedRight = false;
 
 		return true;
 	}
@@ -169,6 +181,8 @@ bool Ball::hasCollisionWithArenaBoundaryLeft()
 		this->speed = 0.0;
 		this->position.x = 0.0;
 		this->position.z = 0.0;
+		this->yetCollidedLeft = false;
+		this->yetCollidedRight = false;
 
 		return true;
 	}

@@ -130,6 +130,9 @@ void Game::runMainLoop()
 		->setLeftBar(this->leftBar)
 		->setRightBar(this->rightBar);
 
+
+	//Text* font = new Text();
+
 	this->timeDelta = this->getTimeDelta();
 
 	do {
@@ -138,6 +141,9 @@ void Game::runMainLoop()
 		this->ball->setTimeDelta(this->timeDelta);
 		this->leftBar->setTimeDelta(this->timeDelta);
 		this->rightBar->setTimeDelta(this->timeDelta);
+
+
+
 
 		this->handleDraw(floor, this->taos[Tao::FlatBlueGreyTexture]);
 		this->handleDraw(this->arenaBoundaryTop, this->taos[Tao::FlatFlirtatiousTexture]);
@@ -149,6 +155,10 @@ void Game::runMainLoop()
 		this->handleDraw(this->rightBar, this->taos[Tao::FlatHighBlueTexture]);
 
 		this->handleDraw(this->ball, this->taos[Tao::BallTexture]);
+
+		//font->print(50, 50, "Red: 0");
+		//scoreBlue->print();
+		//this->sendMvp();
 		// ###################################################
 		this->postMainLoop();
 	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
@@ -189,6 +199,16 @@ void Game::handleDraw(GameObject* gameObject, GLuint texture)
 	gameObject->draw();
 }
 
+void Game::pause()
+{
+	this->ball->stopRolling();
+}
+
+void Game::resume()
+{
+	this->ball->startRolling();
+}
+
 void Game::generateMvp() {
 	const float cameraHeight = 25;
 
@@ -198,7 +218,6 @@ void Game::generateMvp() {
 		0.1f,
 		100.0f
 	);
-
 	this->view = glm::lookAt(
 		glm::vec3(25, cameraHeight, 0),
 		glm::vec3(0, 0, 0),
@@ -236,6 +255,6 @@ void Game::handleKeys()
 	if (glfwGetKey(this->window, GLFW_KEY_UP) == GLFW_PRESS) this->rightBar->moveUp();
 	if (glfwGetKey(this->window, GLFW_KEY_DOWN) == GLFW_PRESS) this->rightBar->moveDown();
 
-	if (glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS)	this->ball->stopRolling();
-	if (glfwGetKey(this->window, GLFW_KEY_ENTER) == GLFW_PRESS)	this->ball->startRolling();
+	if (glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS) this->pause();
+	if (glfwGetKey(this->window, GLFW_KEY_ENTER) == GLFW_PRESS)	this->resume();
 }
