@@ -9,7 +9,7 @@ RightBar::RightBar(ObjectLoader* objectLoader, GLuint vao)
 
 glm::mat4 RightBar::transform(glm::mat4 model)
 {
-	glm::vec3 translateValue = glm::vec3(this->position, 0.0f, -16.0f);
+	glm::vec3 translateValue = glm::vec3(this->position, 0.0f, -19.0f);
 	glm::vec3 scaleValue = glm::vec3(4.0f, 0.8f, 0.2f);
 
 	glm::mat4 translate = glm::translate(glm::mat4(1.0), translateValue);

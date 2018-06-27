@@ -3,7 +3,7 @@ class RightBar: public GameObject
 {
 private:
 	float position = 0;
-	float speed = 30;
+	float speed = 35;
 	GLdouble timeDelta = 0;
 
 	ArenaBoundaryTop* arenaBoundaryTop;

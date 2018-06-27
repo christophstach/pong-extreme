@@ -6,7 +6,7 @@ Ball::Ball(ObjectLoader* objectLoader, GLuint vao)
 	this->position = glm::vec3(0.0, 0.0, 0.0);
 	this->direction = glm::vec3(1.0, 0.0, 1.0);
 	this->object = new ThreeDimensionalObject(objectLoader, vao, "./resources/objects/ball.obj");
-	this->ballCollisionSound = new WaveSound("./resources/audios/tennisserve.wav");
+	this->ballCollisionSound = new WaveSound("./resources/audios/ssbm_shell.wav");
 }
 
 void Ball::checkCollisions()
@@ -21,8 +21,8 @@ void Ball::checkCollisions()
 
 	if (this->hasCollisionWithArenaBoundaryLeft()) this->direction[x] = -1.0;
 	if (this->hasCollisionWithArenaBoundaryRight()) this->direction[x] = 1.0;
-	if (this->hasCollisionWithArenaBoundaryTop()) this->direction[y] = -this->direction[y];
-	if (this->hasCollisionWithArenaBoundaryBottom()) this->direction[y] = -this->direction[y];
+	if (this->hasCollisionWithArenaBoundaryTop() && this->direction[y] < 0) this->direction[y] = -this->direction[y];
+	if (this->hasCollisionWithArenaBoundaryBottom() && this->direction[y] > 0) this->direction[y] = -this->direction[y];
 
 	this->position += glm::vec3(
 		this->direction.x * this->speed * this->timeDelta,
@@ -143,7 +143,7 @@ bool Ball::hasCollisionWithRightBar()
 				this->yetCollidedLeft = false;
 				this->ballCollisionSound->play();
 			}
-			
+
 			return true;
 		}
 	}
