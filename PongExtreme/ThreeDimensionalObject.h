@@ -17,5 +17,6 @@ public:
 	ThreeDimensionalObject(ObjectLoader* objectLoader, GLuint vao, const char* objectPath);
 	void calculateBoundingBox();
 	void draw();
+	~ThreeDimensionalObject();
 };
 

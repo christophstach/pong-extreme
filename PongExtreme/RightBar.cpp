@@ -66,3 +66,8 @@ RightBar* RightBar::setTimeDelta(GLdouble timeDelta)
 	this->timeDelta = timeDelta;
 	return this;
 }
+
+RightBar::~RightBar()
+{
+	delete this->object;
+}

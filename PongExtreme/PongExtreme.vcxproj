@@ -159,11 +159,11 @@
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="LeftBar.h" />
-    <ClInclude Include="Text.h" />
+    <ClInclude Include="NumberLeft.h" />
+    <ClInclude Include="NumberRight.h" />
     <ClInclude Include="ObjectDefinition.h" />
     <ClInclude Include="ObjectLoader.h" />
     <ClInclude Include="BoundingBox.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="RightBar.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="stdafx.h" />
@@ -184,7 +184,8 @@
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="LeftBar.cpp" />
-    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="NumberLeft.cpp" />
+    <ClCompile Include="NumberRight.cpp" />
     <ClCompile Include="ObjectDefinition.cpp" />
     <ClCompile Include="ObjectLoader.cpp" />
     <ClCompile Include="BoundingBox.cpp" />

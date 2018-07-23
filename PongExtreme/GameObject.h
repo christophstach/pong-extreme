@@ -9,5 +9,6 @@ public:
 	virtual BoundingBox * getBoundingBox();
 	virtual GameObject* transformBoundingBox(glm::vec3 translateValue, glm::vec3 scaleValue);
 	virtual GameObject* draw();
+	~GameObject();
 };
 

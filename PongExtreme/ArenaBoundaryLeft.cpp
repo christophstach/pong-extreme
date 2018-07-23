@@ -23,3 +23,8 @@ GameObject* ArenaBoundaryLeft::draw()
 	this->object->draw();
 	return this;
 }
+
+ArenaBoundaryLeft::~ArenaBoundaryLeft()
+{
+	delete this->object;
+}

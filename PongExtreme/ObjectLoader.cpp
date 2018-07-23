@@ -66,6 +66,8 @@ ObjectDefinition* ObjectLoader::load(const char * path)
 					if (matches != 2)
 					{
 						printf("File can't be read by our simple parser (%d matches) :-( Try exporting with other options\n", matches);
+						getchar();
+
 						exit(EXIT_FAILURE);
 					}
 					else
@@ -107,4 +109,8 @@ ObjectDefinition* ObjectLoader::load(const char * path)
 	}
 
 	return objectDefinition;
+}
+
+ObjectLoader::~ObjectLoader()
+{
 }

@@ -5,3 +5,7 @@
 ObjectDefinition::ObjectDefinition()
 {
 }
+
+ObjectDefinition::~ObjectDefinition()
+{
+}

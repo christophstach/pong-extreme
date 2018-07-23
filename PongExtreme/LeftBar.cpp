@@ -66,3 +66,8 @@ LeftBar * LeftBar::setTimeDelta(GLdouble timeDelta)
 	this->timeDelta = timeDelta;
 	return this;
 }
+
+LeftBar::~LeftBar()
+{
+	delete this->object;
+}

@@ -17,10 +17,6 @@ Game::Game()
 
 Game::~Game()
 {
-	// delete this->window;
-	// delete this->shaderLoader;
-	// delete this->textureLoader;
-	// delete this->objectLoader;
 }
 
 void Game::init()
@@ -103,6 +99,27 @@ void Game::runMainLoop()
 	this->taos[Tao::FlatOrangeHibiscusTexture] = this->textureLoader->loadStb("./resources/textures/flat/orange-hibiscus.png");
 	this->taos[Tao::FlatReptileGreenTexture] = this->textureLoader->loadStb("./resources/textures/flat/reptile-green.png");
 
+	this->numbersLeft[0] = new NumberLeft(0, this->objectLoader, this->vaos[Vao::NumberZeroLeftObject]);
+	this->numbersLeft[1] = new NumberLeft(1, this->objectLoader, this->vaos[Vao::NumberOneLeftObject]);
+	this->numbersLeft[2] = new NumberLeft(2, this->objectLoader, this->vaos[Vao::NumberTwoLeftObject]);
+	this->numbersLeft[3] = new NumberLeft(3, this->objectLoader, this->vaos[Vao::NumberThreeLeftObject]);
+	this->numbersLeft[4] = new NumberLeft(4, this->objectLoader, this->vaos[Vao::NumberFourLeftObject]);
+	this->numbersLeft[5] = new NumberLeft(5, this->objectLoader, this->vaos[Vao::NumberFiveLeftObject]);
+	this->numbersLeft[6] = new NumberLeft(6, this->objectLoader, this->vaos[Vao::NumberSixLeftObject]);
+	this->numbersLeft[7] = new NumberLeft(7, this->objectLoader, this->vaos[Vao::NumberSevenLeftObject]);
+	this->numbersLeft[8] = new NumberLeft(8, this->objectLoader, this->vaos[Vao::NumberEightLeftObject]);
+	this->numbersLeft[9] = new NumberLeft(9, this->objectLoader, this->vaos[Vao::NumberNineLeftObject]);
+
+	this->numbersRight[0] = new NumberRight(0, this->objectLoader, this->vaos[Vao::NumberZeroRightObject]);
+	this->numbersRight[1] = new NumberRight(1, this->objectLoader, this->vaos[Vao::NumberOneRightObject]);
+	this->numbersRight[2] = new NumberRight(2, this->objectLoader, this->vaos[Vao::NumberTwoRightObject]);
+	this->numbersRight[3] = new NumberRight(3, this->objectLoader, this->vaos[Vao::NumberThreeRightObject]);
+	this->numbersRight[4] = new NumberRight(4, this->objectLoader, this->vaos[Vao::NumberFourRightObject]);
+	this->numbersRight[5] = new NumberRight(5, this->objectLoader, this->vaos[Vao::NumberFiveRightObject]);
+	this->numbersRight[6] = new NumberRight(6, this->objectLoader, this->vaos[Vao::NumberSixRightObject]);
+	this->numbersRight[7] = new NumberRight(7, this->objectLoader, this->vaos[Vao::NumberSevenRightObject]);
+	this->numbersRight[8] = new NumberRight(8, this->objectLoader, this->vaos[Vao::NumberEightRightObject]);
+	this->numbersRight[9] = new NumberRight(9, this->objectLoader, this->vaos[Vao::NumberNineRightObject]);
 
 	this->floor = new Floor(this->objectLoader, this->vaos[Vao::FloorObject]);
 	this->leftBar = new LeftBar(this->objectLoader, this->vaos[Vao::LeftBarObject]);
@@ -130,9 +147,6 @@ void Game::runMainLoop()
 		->setLeftBar(this->leftBar)
 		->setRightBar(this->rightBar);
 
-
-	//Text* font = new Text();
-
 	this->timeDelta = this->getTimeDelta();
 
 	do {
@@ -156,12 +170,28 @@ void Game::runMainLoop()
 
 		this->handleDraw(this->ball, this->taos[Tao::BallTexture]);
 
-		//font->print(50, 50, "Red: 0");
-		//scoreBlue->print();
-		//this->sendMvp();
+		this->handleDraw(this->numbersLeft[this->ball->getScoreLeft()], this->taos[Tao::FlatFusionRedTexture]);
+		this->handleDraw(this->numbersRight[this->ball->getScoreRight()], this->taos[Tao::FlatHighBlueTexture]);
 		// ###################################################
 		this->postMainLoop();
 	} while (glfwGetKey(this->window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(this->window) == 0);
+
+	delete this->shaderLoader;
+	delete this->textureLoader;
+	delete this->objectLoader;
+
+	delete this->numbersLeft;
+	delete this->numbersRight;
+
+	//delete this->floor;
+	//delete this->leftBar;
+	//delete this->rightBar;
+	//delete this->ball;
+
+	//delete this->arenaBoundaryTop;
+	//delete this->arenaBoundaryRight;
+	//delete this->arenaBoundaryBottom;
+	//delete this->arenaBoundaryLeft;
 }
 
 void Game::preMainLoop()

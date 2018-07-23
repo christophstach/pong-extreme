@@ -25,3 +25,9 @@ GameObject* GameObject::draw()
 {
 	return this;
 }
+
+GameObject::~GameObject()
+{
+	delete this->object;
+	delete this->boundingBox;
+}

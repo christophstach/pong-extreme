@@ -19,5 +19,6 @@ public:
 	RightBar* setArenaBoundaryTop(ArenaBoundaryTop* arenaBoundaryTop);
 	RightBar* setArenaBoundaryBottom(ArenaBoundaryBottom* arenaBoundaryBottom);
 	RightBar* setTimeDelta(GLdouble timeDelta);
+	~RightBar();
 };
 

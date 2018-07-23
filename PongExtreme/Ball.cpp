@@ -39,7 +39,6 @@ glm::mat4 Ball::transform(glm::mat4 model)
 	}
 
 	glm::vec3 translateValue = this->position;
-	//							y    z    x
 	glm::vec3 rotateValue = glm::vec3(this->direction.z, -this->direction.y, -this->direction.x);
 	glm::vec3 scaleValue = glm::vec3(0.75, 0.75, 0.75);
 
@@ -164,6 +163,12 @@ bool Ball::hasCollisionWithArenaBoundaryRight()
 		this->position.z = 0.0;
 		this->yetCollidedLeft = false;
 		this->yetCollidedRight = false;
+		this->scoreLeft++;
+
+		if (this->scoreLeft == 10) {
+			this->scoreLeft = 0;
+			this->scoreRight = 0;
+		}
 
 		return true;
 	}
@@ -184,11 +189,32 @@ bool Ball::hasCollisionWithArenaBoundaryLeft()
 		this->position.z = 0.0;
 		this->yetCollidedLeft = false;
 		this->yetCollidedRight = false;
+		this->scoreRight++;
+
+		if (this->scoreRight == 10) {
+			this->scoreLeft = 0;
+			this->scoreRight = 0;
+		}
 
 		return true;
 	}
 
 	return false;
+}
+
+int Ball::getScoreLeft()
+{
+	return this->scoreLeft;
+}
+
+int Ball::getScoreRight()
+{
+	return this->scoreRight;
+}
+
+Ball::~Ball()
+{
+	delete this->object;
 }
 
 

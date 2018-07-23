@@ -205,3 +205,7 @@ GLuint TextureLoader::loadDds(const char * imagePath) {
 
 	return textureId;
 }
+
+TextureLoader::~TextureLoader()
+{
+}

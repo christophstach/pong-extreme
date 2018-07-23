@@ -7,5 +7,6 @@ public:
 	std::vector<glm::vec3> normalBufferData;
 
 	ObjectDefinition();
+	~ObjectDefinition();
 };
 

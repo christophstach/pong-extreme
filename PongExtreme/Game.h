@@ -24,6 +24,9 @@ private:
 	TextureLoader* textureLoader = nullptr;
 	ObjectLoader* objectLoader = nullptr;
 
+	GameObject** numbersLeft = new GameObject*[10];
+	GameObject** numbersRight = new GameObject*[10];
+
 	Floor* floor = nullptr;
 	LeftBar* leftBar = nullptr;
 	RightBar* rightBar = nullptr;

@@ -2,6 +2,8 @@
 class Ball : public GameObject
 {
 private:
+	int scoreLeft = 0;
+	int scoreRight = 0;
 	float rotation = 0.0;
 	float speed = 0.0;
 	glm::vec3 position;
@@ -42,5 +44,10 @@ public:
 	bool hasCollisionWithArenaBoundaryRight();
 	bool hasCollisionWithArenaBoundaryBottom();
 	bool hasCollisionWithArenaBoundaryLeft();
+
+	int getScoreLeft();
+	int getScoreRight();
+
+	~Ball();
 };
 

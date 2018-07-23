@@ -5,5 +5,6 @@ public:
 	ArenaBoundaryLeft(ObjectLoader* objectLoader, GLuint vao);
 	glm::mat4 transform(glm::mat4 model);
 	GameObject* draw();
+	~ArenaBoundaryLeft();
 };
 

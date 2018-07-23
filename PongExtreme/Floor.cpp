@@ -24,3 +24,8 @@ GameObject* Floor::draw()
 	this->object->draw();
 	return this;
 }
+
+Floor::~Floor()
+{
+	delete this->object;
+}

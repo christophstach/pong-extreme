@@ -70,3 +70,8 @@ void ThreeDimensionalObject::draw()
 
 	glBindVertexArray(0);
 }
+
+ThreeDimensionalObject::~ThreeDimensionalObject()
+{
+	delete this->boundingBox;
+}
